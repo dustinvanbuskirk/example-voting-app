@@ -55,6 +55,7 @@ steps:
       condition:
         any:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
+          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronized'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   DeployPRRelease:
     stage: pullrequest

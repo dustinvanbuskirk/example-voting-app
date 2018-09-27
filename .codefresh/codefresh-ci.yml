@@ -80,7 +80,9 @@ steps:
     when:
       condition:
         any:
-          isPR: "Number(${{CF_PULL_REQUEST_NUMBER}})"
+          isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
+          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronized'"
+          isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   RunPRDVTs:
     stage: pullrequest
     image: 'codefresh/cli:latest'
@@ -89,7 +91,9 @@ steps:
     when:
       condition:
         any:
-          isPR: "Number(${{CF_PULL_REQUEST_NUMBER}})"
+          isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
+          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronized'"
+          isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   NotifyGitHubPREnvCreated:
     title: Set Pull Request Environment URL
     image: cloudposse/github-status-updater
@@ -106,7 +110,9 @@ steps:
     when:
       condition:
         any:
-          isPR: "Number(${{CF_PULL_REQUEST_NUMBER}})"
+          isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
+          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronized'"
+          isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   NotifySlackChannelPR:
     title: Sending Slack Notification for Pull Request Environment
     image: cloudposse/slack-notifier
@@ -119,7 +125,9 @@ steps:
     when:
       condition:
         any:
-          isPR: "Number(${{CF_PULL_REQUEST_NUMBER}})"
+          isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
+          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronized'"
+          isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   PushChartToHelmRepository:
     stage: staging
     title: Push Helm Chart to Repository

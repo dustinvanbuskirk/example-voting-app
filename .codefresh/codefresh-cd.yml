@@ -117,11 +117,18 @@ steps:
     title: Sending Slack Notification for Pull Request Environment
     image: cloudposse/slack-notifier
     environment:
-      - SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
+      - SLACK_WEBHOOK_URL="hooks.slack.com/services/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"
       - SLACK_USER_NAME=codefresh
       - SLACK_ICON_EMOJI=":codefresh:"
-      - SLACK_TITLE="Pull Request Environment Deployed for ${{CF_BRANCH_TAG_NORMALIZED}}"
+      - SLACK_TITLE="Pull Request Environment Deployed for ${{CF_BRANCH}}"
       - SLACK_TITLE_LINK="https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}/services"
+      - SLACK_FOOTER_ICON="https://cloudposse.com/wp-content/uploads/sites/29/2018/02/kubernetes.png"
+      - SLACK_FIELD1_TITLE="Environment"
+      - SLACK_FIELD1_VALUE="Pull Request"
+      - SLACK_FIELD1_SHORT="true"
+      - SLACK_FIELD2_TITLE="Version"
+      - SLACK_FIELD2_VALUE="${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}"
+      - SLACK_FIELD2_SHORT="true"
     when:
       condition:
         any:
@@ -177,11 +184,18 @@ steps:
     title: Sending Slack Notification for Staging Upgrade
     image: cloudposse/slack-notifier
     environment:
-      - SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
+      - SLACK_WEBHOOK_URL="hooks.slack.com/services/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"
       - SLACK_USER_NAME=codefresh
       - SLACK_ICON_EMOJI=":codefresh:"
-      - SLACK_TITLE="Staging Upgraded to ${{CF_BRANCH_TAG_NORMALIZED}}"
-      - SLACK_TITLE_LINK="https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/example-voting-app/services" 
+      - SLACK_TITLE="Staging Upgraded"
+      - SLACK_TITLE_LINK="https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/example-voting-app/services"
+      - SLACK_FOOTER_ICON="https://cloudposse.com/wp-content/uploads/sites/29/2018/02/kubernetes.png"
+      - SLACK_FIELD1_TITLE="Environment"
+      - SLACK_FIELD1_VALUE="Staging"
+      - SLACK_FIELD1_SHORT="true"
+      - SLACK_FIELD2_TITLE="Version"
+      - SLACK_FIELD2_VALUE="${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}"
+      - SLACK_FIELD2_SHORT="true"
     when:
       branch:
         only:
@@ -226,11 +240,18 @@ steps:
     title: Sending Slack Notification for Production Upgrade
     image: cloudposse/slack-notifier
     environment:
-      - SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
+      - SLACK_WEBHOOK_URL="hooks.slack.com/services/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"
       - SLACK_USER_NAME=codefresh
       - SLACK_ICON_EMOJI=":codefresh:"
-      - SLACK_TITLE="Production Upgraded to ${{CF_BRANCH_TAG_NORMALIZED}}"
+      - SLACK_TITLE="Production Upgraded"
       - SLACK_TITLE_LINK="https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/example-voting-app/services"
+      - SLACK_FOOTER_ICON="https://cloudposse.com/wp-content/uploads/sites/29/2018/02/kubernetes.png"
+      - SLACK_FIELD1_TITLE="Environment"
+      - SLACK_FIELD1_VALUE="Production"
+      - SLACK_FIELD1_SHORT="true"
+      - SLACK_FIELD2_TITLE="Version"
+      - SLACK_FIELD2_VALUE="${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}"
+      - SLACK_FIELD2_SHORT="true"
     when:
       condition:
         all:

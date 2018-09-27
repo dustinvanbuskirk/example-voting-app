@@ -117,7 +117,7 @@ steps:
     title: Sending Slack Notification for Pull Request Environment
     image: cloudposse/slack-notifier
     environment:
-      - SLACK_WEBHOOK_URL="hooks.slack.com/services/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"
+      - SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
       - SLACK_USER_NAME=codefresh
       - SLACK_ICON_EMOJI=":codefresh:"
       - SLACK_TITLE="Pull Request Environment Deployed for ${{CF_BRANCH}}"
@@ -152,7 +152,7 @@ steps:
     image: codefresh/cfstep-helm:2.10.0
     working_directory: ./
     environment:
-      - CHART_NAME=h.cfcr.io/dustinvanbuskirk/default/example-voting-app
+      - CHART_NAME=https://h.cfcr.io/dustinvanbuskirk/default/example-voting-app
       - RELEASE_NAME=example-voting-app
       - KUBE_CONTEXT=sales-demo@FirstKubernetes
       - NAMESPACE=dustinvb-staging
@@ -169,7 +169,8 @@ steps:
     when:
       condition:
         all:
-          prodRelease: '"${{CF_PRERELEASE_FLAG}}" == true'
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
+          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   RunStagingDVTs:
     stage: staging
     title: Running DVTS on Staging Release
@@ -179,12 +180,13 @@ steps:
     when:
       condition:
         all:
-          prodRelease: '"${{CF_PRERELEASE_FLAG}}" == true'
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
+          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   NotifySlackChannelStaging:
     title: Sending Slack Notification for Staging Upgrade
     image: cloudposse/slack-notifier
     environment:
-      - SLACK_WEBHOOK_URL="hooks.slack.com/services/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"
+      - SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
       - SLACK_USER_NAME=codefresh
       - SLACK_ICON_EMOJI=":codefresh:"
       - SLACK_TITLE="Staging Upgraded"
@@ -199,14 +201,15 @@ steps:
     when:
       condition:
         all:
-          prodRelease: '"${{CF_PRERELEASE_FLAG}}" == true'
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
+          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   UpgradeProductionRelease:
     stage: production
     title: Upgrading Production Release
     image: codefresh/cfstep-helm:2.10.0
     working_directory: ./
     environment:
-      - CHART_NAME=h.cfcr.io/dustinvanbuskirk/default/example-voting-app
+      - CHART_NAME=https://h.cfcr.io/dustinvanbuskirk/default/example-voting-app
       - RELEASE_NAME=example-voting-app
       - KUBE_CONTEXT=sales-prod@FirstKubernetes
       - NAMESPACE=dustinvb-production
@@ -223,8 +226,8 @@ steps:
     when:
       condition:
         all:
-          prodRelease: '"${{CF_PRERELEASE_FLAG}}" == false'
-          masterBranch: '"${{CF_BASE_BRANCH}}" == "master"'
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   RunProductionDVTs:
     stage: production
     title: Running DVTS on Production Release
@@ -234,13 +237,13 @@ steps:
     when:
       condition:
         all:
-          prodRelease: '"${{CF_PRERELEASE_FLAG}}" == false'
-          masterBranch: '"${{CF_BASE_BRANCH}}" == "master"'
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 
   NotifySlackChannelProduction:
     title: Sending Slack Notification for Production Upgrade
     image: cloudposse/slack-notifier
     environment:
-      - SLACK_WEBHOOK_URL="hooks.slack.com/services/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"
+      - SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
       - SLACK_USER_NAME=codefresh
       - SLACK_ICON_EMOJI=":codefresh:"
       - SLACK_TITLE="Production Upgraded"
@@ -255,5 +258,5 @@ steps:
     when:
       condition:
         all:
-          prodRelease: '"${{CF_PRERELEASE_FLAG}}" == false'
-          masterBranch: '"${{CF_BASE_BRANCH}}" == "master"' 
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 

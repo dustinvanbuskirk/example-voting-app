@@ -167,9 +167,9 @@ steps:
       - custom_worker_image_tag=master-${{CF_SHORT_REVISION}}
       - custom_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-staging
     when:
-      branch:
-        only:
-          - master
+      condition:
+        all:
+          prodRelease: '"${{CF_PRERELEASE_FLAG}}" == true'
   RunStagingDVTs:
     stage: staging
     title: Running DVTS on Staging Release
@@ -177,9 +177,9 @@ steps:
     commands:
       - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo@FirstKubernetes -v NAMESPACE=dustinvb-staging -v SERVICES='vote result' -v RELEASE_NAME='example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'
     when:
-      branch:
-        only:
-          - master
+      condition:
+        all:
+          prodRelease: '"${{CF_PRERELEASE_FLAG}}" == true'
   NotifySlackChannelStaging:
     title: Sending Slack Notification for Staging Upgrade
     image: cloudposse/slack-notifier
@@ -197,9 +197,9 @@ steps:
       - SLACK_FIELD2_VALUE="${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}"
       - SLACK_FIELD2_SHORT="true"
     when:
-      branch:
-        only:
-          - master
+      condition:
+        all:
+          prodRelease: '"${{CF_PRERELEASE_FLAG}}" == true'
   UpgradeProductionRelease:
     stage: production
     title: Upgrading Production Release
@@ -223,7 +223,7 @@ steps:
     when:
       condition:
         all:
-          semverTag: 'match("${{CF_BRANCH}}", "^v([0-9]+)([.][0-9]+){1,2}$", true) == true'
+          prodRelease: '"${{CF_PRERELEASE_FLAG}}" == false'
           masterBranch: '"${{CF_BASE_BRANCH}}" == "master"'
   RunProductionDVTs:
     stage: production
@@ -234,7 +234,7 @@ steps:
     when:
       condition:
         all:
-          semverTag: 'match("${{CF_BRANCH}}", "^v([0-9]+)([.][0-9]+){1,2}$", true) == true'
+          prodRelease: '"${{CF_PRERELEASE_FLAG}}" == false'
           masterBranch: '"${{CF_BASE_BRANCH}}" == "master"'
   NotifySlackChannelProduction:
     title: Sending Slack Notification for Production Upgrade
@@ -255,5 +255,5 @@ steps:
     when:
       condition:
         all:
-          semverTag: 'match("${{CF_BRANCH}}", "^v([0-9]+)([.][0-9]+){1,2}$", true) == true'
+          prodRelease: '"${{CF_PRERELEASE_FLAG}}" == false'
           masterBranch: '"${{CF_BASE_BRANCH}}" == "master"' 

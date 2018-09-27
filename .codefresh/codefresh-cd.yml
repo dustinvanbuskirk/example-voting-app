@@ -50,7 +50,7 @@ steps:
       - GITHUB_CONTEXT=Pull Request Environment
       - GITHUB_STATE=pending
       - GITHUB_DESCRIPTION=Creating Pull Request Environment
-      - GITHUB_TARGET_URL=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/${{CF_PULL_REQUEST_NUMBER}}-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_REPO_NAME}}/services
+      - GITHUB_TARGET_URL=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}/services
     when:
       condition:
         any:
@@ -87,7 +87,7 @@ steps:
     stage: "pull request"
     image: 'codefresh/cli:latest'
     commands:
-      - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo -v NAMESPACE=dustinvb-pull-requests -v SERVICES='vote result' -v RELEASE_NAME='${{CF_PULL_REQUEST_NUMBER}}-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_REPO_NAME}}' -v TEST_IMAGE='example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+      - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo -v NAMESPACE=dustinvb-pull-requests -v SERVICES='vote result' -v RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}' -v TEST_IMAGE='example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
     when:
       condition:
         any:
@@ -106,7 +106,7 @@ steps:
       - GITHUB_CONTEXT=Pull Request Environment
       - GITHUB_STATE=success
       - GITHUB_DESCRIPTION=Created Pull Request Environment
-      - GITHUB_TARGET_URL=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/${{CF_PULL_REQUEST_NUMBER}}-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_REPO_NAME}}/services
+      - GITHUB_TARGET_URL=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}/services
     when:
       condition:
         any:
@@ -121,7 +121,7 @@ steps:
       - SLACK_USER_NAME=codefresh
       - SLACK_ICON_EMOJI=":codefresh:"
       - SLACK_TITLE="Pull Request Environment Deployed for ${{CF_BRANCH_TAG_NORMALIZED}}"
-      - SLACK_TITLE_LINK="https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/${{CF_PULL_REQUEST_NUMBER}}-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_REPO_NAME}}/services"
+      - SLACK_TITLE_LINK="https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}/services"
     when:
       condition:
         any:

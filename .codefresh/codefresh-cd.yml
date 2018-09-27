@@ -1,7 +1,7 @@
 version: '1.0'
 stages:
   - build
-  - pullrequest
+  - "pull request"
   - staging
   - production
 steps:
@@ -34,7 +34,7 @@ steps:
         title: Building Test Image
         type: build
         image_name: example-voting-app/tests
-        working_directory: ./
+        working_directory: ./tests/
         dockerfile: Dockerfile
         tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
     fail_fast: true
@@ -58,7 +58,7 @@ steps:
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronized'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   DeployPRRelease:
-    stage: pullrequest
+    stage: "pull request"
     title: Create Ephemeral Helm Release for Pull Request
     image: codefresh/cfstep-helm:2.10.0
     working_directory: ./
@@ -84,7 +84,7 @@ steps:
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   RunPRDVTs:
-    stage: pullrequest
+    stage: "pull request"
     image: 'codefresh/cli:latest'
     commands:
       - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo -v NAMESPACE=dustinvb-pull-requests -v SERVICES='vote result' -v RELEASE_NAME='${{CF_PULL_REQUEST_NUMBER}}-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_REPO_NAME}}' -v TEST_IMAGE='example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'

@@ -81,7 +81,7 @@ steps:
       condition:
         any:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
-          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronized'"
+          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   RunPRDVTs:
     stage: pullrequest
@@ -92,7 +92,7 @@ steps:
       condition:
         any:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
-          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronized'"
+          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   NotifyGitHubPREnvCreated:
     title: Set Pull Request Environment URL
@@ -111,7 +111,7 @@ steps:
       condition:
         any:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
-          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronized'"
+          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   NotifySlackChannelPR:
     title: Sending Slack Notification for Pull Request Environment
@@ -126,7 +126,7 @@ steps:
       condition:
         any:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
-          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronized'"
+          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   PushChartToHelmRepository:
     stage: staging

@@ -118,7 +118,7 @@ steps:
     image: cloudposse/slack-notifier
     environment:
       - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
-      - SLACK_USER_NAME=codefresh
+      - SLACK_USER_NAME=Codefresh
       - "SLACK_ICON_EMOJI=:superfresh:"
       - SLACK_TITLE=Pull Request Environment Deployed for ${{CF_BRANCH}}
       - SLACK_TITLE_LINK=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}/services
@@ -127,7 +127,7 @@ steps:
       - SLACK_FOOTER=Helm Deploy of example-voting-app
       - SLACK_AUTHOR_NAME=${{CF_BUILD_ID}}
       - SLACK_AUTHOR_LINK=${{CF_BUILD_URL}}
-      - SLACK_AUTHOR_ICON=https://codefresh.io/docs/images/b0fe782-superfresh.jpeg
+      - SLACK_AUTHOR_ICON=https://github.com/${{CF_BUILD_INITIATOR}}.png
       - SLACK_FIELD1_TITLE=Environment
       - SLACK_FIELD1_VALUE=Pull Request
       - SLACK_FIELD1_SHORT=true
@@ -192,12 +192,15 @@ steps:
     image: cloudposse/slack-notifier
     environment:
       - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
-      - SLACK_USER_NAME=codefresh
+      - SLACK_USER_NAME=Codefresh
       - "SLACK_ICON_EMOJI=:superfresh:"
       - SLACK_TITLE=Staging Upgraded
       - SLACK_TITLE_LINK=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/example-voting-app/services
       - SLACK_FOOTER_ICON=https://pbs.twimg.com/profile_images/859843681553178624/AHcBc6EG_400x400.jpg
       - SLACK_THUMB_URL=https://pbs.twimg.com/profile_images/699752011428810753/ayRqrKW1_400x400.png
+      - SLACK_AUTHOR_NAME=${{CF_BUILD_ID}}
+      - SLACK_AUTHOR_LINK=${{CF_BUILD_URL}}
+      - SLACK_AUTHOR_ICON=https://codefresh.io/docs/images/b0fe782-superfresh.jpeg
       - SLACK_FIELD1_TITLE=Environment
       - SLACK_FIELD1_VALUE=Staging
       - SLACK_FIELD1_SHORT=true
@@ -250,12 +253,15 @@ steps:
     image: cloudposse/slack-notifier
     environment:
       - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
-      - SLACK_USER_NAME=codefresh
+      - SLACK_USER_NAME=Codefresh
       - "SLACK_ICON_EMOJI=:superfresh:"
       - SLACK_TITLE=Production Upgraded
       - SLACK_TITLE_LINK=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/example-voting-app/services
       - SLACK_FOOTER_ICON=https://pbs.twimg.com/profile_images/859843681553178624/AHcBc6EG_400x400.jpg
       - SLACK_THUMB_URL=https://pbs.twimg.com/profile_images/699752011428810753/ayRqrKW1_400x400.png
+      - SLACK_AUTHOR_NAME=${{CF_BUILD_ID}}
+      - SLACK_AUTHOR_LINK=${{CF_BUILD_URL}}
+      - SLACK_AUTHOR_ICON=https://codefresh.io/docs/images/b0fe782-superfresh.jpeg
       - SLACK_FIELD1_TITLE=Environment
       - SLACK_FIELD1_VALUE=Production
       - SLACK_FIELD1_SHORT=true

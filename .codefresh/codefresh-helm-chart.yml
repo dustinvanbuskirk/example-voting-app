@@ -1,0 +1,7 @@
+version: '1.0'
+steps:
+  LintHelmChart:
+    title: Linting Helm Chart
+    image: codefresh/cfstep-helm
+    commands:
+      - bash -c 'cd /codefresh/volume/example-voting-app/example-voting-app && helm lint'

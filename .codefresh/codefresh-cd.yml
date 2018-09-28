@@ -63,20 +63,20 @@ steps:
     image: codefresh/cfstep-helm:2.10.0
     working_directory: ./
     environment:
-      - CHART_NAME=example-voting-app
+      - CHART_REF=example-voting-app
       - RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}'
       - KUBE_CONTEXT=sales-demo@FirstKubernetes
       - NAMESPACE=dustinvb-pull-requests
       - DEBUG_CHART=true
-      - custom_result_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/result
-      - custom_result_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-      - custom_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-pull-requests
-      - custom_vote_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/vote
-      - custom_vote_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-      - custom_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-pull-requests
-      - custom_worker_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/worker
-      - custom_worker_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-      - custom_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-pull-requests  
+      - value_result_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/result
+      - value_result_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+      - value_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-pull-requests
+      - value_vote_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/vote
+      - value_vote_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+      - value_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-pull-requests
+      - value_worker_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/worker
+      - value_worker_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+      - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-pull-requests  
     when:
       condition:
         any:
@@ -157,20 +157,20 @@ steps:
     image: codefresh/cfstep-helm:2.10.0
     working_directory: ./
     environment:
-      - CHART_NAME=https://h.cfcr.io/dustinvanbuskirk/default/example-voting-app
+      - CHART_REF=example-voting-app
       - RELEASE_NAME=example-voting-app
       - KUBE_CONTEXT=sales-demo@FirstKubernetes
       - NAMESPACE=dustinvb-staging
       - DEBUG_CHART=true
-      - custom_result_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/result
-      - custom_result_image_tag=master-${{CF_SHORT_REVISION}}
-      - custom_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-staging
-      - custom_vote_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/vote
-      - custom_vote_image_tag=master-${{CF_SHORT_REVISION}}
-      - custom_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-staging
-      - custom_worker_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/worker
-      - custom_worker_image_tag=master-${{CF_SHORT_REVISION}}
-      - custom_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-staging
+      - value_result_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/result
+      - value_result_image_tag=master-${{CF_SHORT_REVISION}}
+      - value_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-staging
+      - value_vote_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/vote
+      - value_vote_image_tag=master-${{CF_SHORT_REVISION}}
+      - value_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-staging
+      - value_worker_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/worker
+      - value_worker_image_tag=master-${{CF_SHORT_REVISION}}
+      - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-staging
     when:
       condition:
         all:
@@ -218,20 +218,20 @@ steps:
     image: codefresh/cfstep-helm:2.10.0
     working_directory: ./
     environment:
-      - CHART_NAME=https://h.cfcr.io/dustinvanbuskirk/default/example-voting-app
+      - CHART_REF=example-voting-app
       - RELEASE_NAME=example-voting-app
       - KUBE_CONTEXT=sales-prod@FirstKubernetes
       - NAMESPACE=dustinvb-production
       - DEBUG_CHART=true
-      - custom_result_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/result
-      - custom_result_image_tag=master-${{CF_SHORT_REVISION}}
-      - custom_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-production
-      - custom_vote_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/vote
-      - custom_vote_image_tag=master-${{CF_SHORT_REVISION}}
-      - custom_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-production
-      - custom_worker_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/worker
-      - custom_worker_image_tag=master-${{CF_SHORT_REVISION}}
-      - custom_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-production
+      - value_result_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/result
+      - value_result_image_tag=master-${{CF_SHORT_REVISION}}
+      - value_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-production
+      - value_vote_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/vote
+      - value_vote_image_tag=master-${{CF_SHORT_REVISION}}
+      - value_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-production
+      - value_worker_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/worker
+      - value_worker_image_tag=master-${{CF_SHORT_REVISION}}
+      - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-production
     when:
       condition:
         all:

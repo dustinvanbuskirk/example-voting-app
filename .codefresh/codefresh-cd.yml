@@ -175,7 +175,7 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
-          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
+          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   RunStagingDVTs:
     stage: staging
     title: Running DVTS on Staging Release
@@ -186,7 +186,7 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
-          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
+          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   NotifySlackChannelStaging:
     title: Sending Slack Notification for Staging Upgrade
     image: cloudposse/slack-notifier
@@ -211,7 +211,7 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
-          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
+          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   UpgradeProductionRelease:
     stage: production
     title: Upgrading Production Release
@@ -236,7 +236,7 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
+          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   RunProductionDVTs:
     stage: production
     title: Running DVTS on Production Release
@@ -247,7 +247,7 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 
+          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 
   NotifySlackChannelProduction:
     title: Sending Slack Notification for Production Upgrade
     image: cloudposse/slack-notifier
@@ -272,4 +272,4 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 
+          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 

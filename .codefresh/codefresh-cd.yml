@@ -147,6 +147,7 @@ steps:
     environment:
       - ACTION=push
       - CHART_REF=example-voting-app
+      - CHART_VERSION=${{CF_RELEASE_TAG}}
     when:
       branch:
         only:
@@ -158,6 +159,7 @@ steps:
     working_directory: ./
     environment:
       - CHART_REF=example-voting-app
+      - CHART_VERSION=${{CF_RELEASE_TAG}}
       - RELEASE_NAME=example-voting-app
       - KUBE_CONTEXT=sales-demo@FirstKubernetes
       - NAMESPACE=dustinvb-staging
@@ -198,6 +200,7 @@ steps:
       - SLACK_TITLE_LINK=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/example-voting-app/services
       - SLACK_FOOTER_ICON=https://pbs.twimg.com/profile_images/859843681553178624/AHcBc6EG_400x400.jpg
       - SLACK_THUMB_URL=https://pbs.twimg.com/profile_images/699752011428810753/ayRqrKW1_400x400.png
+      - SLACK_FOOTER=Helm Deploy of example-voting-app
       - SLACK_AUTHOR_NAME=${{CF_BUILD_ID}}
       - SLACK_AUTHOR_LINK=${{CF_BUILD_URL}}
       - SLACK_AUTHOR_ICON=https://github.com/${{CF_BUILD_INITIATOR}}.png
@@ -207,6 +210,8 @@ steps:
       - SLACK_FIELD2_TITLE=Version
       - SLACK_FIELD2_VALUE=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
       - SLACK_FIELD2_SHORT=true
+      - "SLACK_FIELD3_TITLE=:github: GitHub Release"
+      - SLACK_FIELD3_VALUE=https://github.com/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}/releases/tag/${{CF_RELEASE_TAG}}
     when:
       condition:
         all:
@@ -219,6 +224,7 @@ steps:
     working_directory: ./
     environment:
       - CHART_REF=example-voting-app
+      - CHART_VERSION=${{CF_RELEASE_TAG}}
       - RELEASE_NAME=example-voting-app
       - KUBE_CONTEXT=sales-prod@FirstKubernetes
       - NAMESPACE=dustinvb-production
@@ -259,6 +265,7 @@ steps:
       - SLACK_TITLE_LINK=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/example-voting-app/services
       - SLACK_FOOTER_ICON=https://pbs.twimg.com/profile_images/859843681553178624/AHcBc6EG_400x400.jpg
       - SLACK_THUMB_URL=https://pbs.twimg.com/profile_images/699752011428810753/ayRqrKW1_400x400.png
+      - SLACK_FOOTER=Helm Deploy of example-voting-app
       - SLACK_AUTHOR_NAME=${{CF_BUILD_ID}}
       - SLACK_AUTHOR_LINK=${{CF_BUILD_URL}}
       - SLACK_AUTHOR_ICON=https://github.com/${{CF_BUILD_INITIATOR}}.png
@@ -268,6 +275,8 @@ steps:
       - SLACK_FIELD2_TITLE=Version
       - SLACK_FIELD2_VALUE=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
       - SLACK_FIELD2_SHORT=true
+      - "SLACK_FIELD3_TITLE=:github: GitHub Release"
+      - SLACK_FIELD3_VALUE=https://github.com/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}/releases/tag/${{CF_RELEASE_TAG}}
     when:
       condition:
         all:

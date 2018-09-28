@@ -200,7 +200,7 @@ steps:
       - SLACK_THUMB_URL=https://pbs.twimg.com/profile_images/699752011428810753/ayRqrKW1_400x400.png
       - SLACK_AUTHOR_NAME=${{CF_BUILD_ID}}
       - SLACK_AUTHOR_LINK=${{CF_BUILD_URL}}
-      - SLACK_AUTHOR_ICON=https://codefresh.io/docs/images/b0fe782-superfresh.jpeg
+      - SLACK_AUTHOR_ICON=https://github.com/${{CF_BUILD_INITIATOR}}.png
       - SLACK_FIELD1_TITLE=Environment
       - SLACK_FIELD1_VALUE=Staging
       - SLACK_FIELD1_SHORT=true
@@ -261,7 +261,7 @@ steps:
       - SLACK_THUMB_URL=https://pbs.twimg.com/profile_images/699752011428810753/ayRqrKW1_400x400.png
       - SLACK_AUTHOR_NAME=${{CF_BUILD_ID}}
       - SLACK_AUTHOR_LINK=${{CF_BUILD_URL}}
-      - SLACK_AUTHOR_ICON=https://codefresh.io/docs/images/b0fe782-superfresh.jpeg
+      - SLACK_AUTHOR_ICON=https://github.com/${{CF_BUILD_INITIATOR}}.png
       - SLACK_FIELD1_TITLE=Environment
       - SLACK_FIELD1_VALUE=Production
       - SLACK_FIELD1_SHORT=true

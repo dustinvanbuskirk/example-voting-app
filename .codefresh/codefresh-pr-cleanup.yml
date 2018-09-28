@@ -20,4 +20,4 @@ steps:
       - SLACK_FOOTER=Deleted Helm Deploy of example-voting-app
       - SLACK_AUTHOR_NAME=${{CF_BUILD_ID}}
       - SLACK_AUTHOR_LINK=${{CF_BUILD_URL}}
-      - SLACK_AUTHOR_ICON=https://codefresh.io/docs/images/b0fe782-superfresh.jpeg
+      - SLACK_AUTHOR_ICON=https://github.com/${{CF_BUILD_INITIATOR}}.png

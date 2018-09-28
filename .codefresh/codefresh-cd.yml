@@ -127,6 +127,7 @@ steps:
       - SLACK_FOOTER=Helm Deploy of example-voting-app
       - SLACK_AUTHOR_NAME=${{CF_BUILD_ID}}
       - SLACK_AUTHOR_LINK=${{CF_BUILD_URL}}
+      - SLACK_AUTHOR_ICON=https://codefresh.io/docs/images/b0fe782-superfresh.jpeg
       - SLACK_FIELD1_TITLE=Environment
       - SLACK_FIELD1_VALUE=Pull Request
       - SLACK_FIELD1_SHORT=true

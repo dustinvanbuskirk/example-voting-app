@@ -125,6 +125,8 @@ steps:
       - SLACK_FOOTER_ICON=https://pbs.twimg.com/profile_images/859843681553178624/AHcBc6EG_400x400.jpg
       - SLACK_THUMB_URL=https://pbs.twimg.com/profile_images/699752011428810753/ayRqrKW1_400x400.png
       - SLACK_FOOTER=Helm Deploy of example-voting-app
+      - SLACK_AUTHOR_NAME=${{CF_BUILD_ID}}
+      - SLACK_AUTHOR_LINK=${{CF_BUILD_URL}}
       - SLACK_FIELD1_TITLE=Environment
       - SLACK_FIELD1_VALUE=Pull Request
       - SLACK_FIELD1_SHORT=true

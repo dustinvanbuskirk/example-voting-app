@@ -149,9 +149,10 @@ steps:
       - CHART_REF=example-voting-app
       - CHART_VERSION=${{CF_RELEASE_TAG}}
     when:
-      branch:
-        only:
-          - master
+      condition:
+        any:
+          stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
   UpgradeStagingRelease:
     stage: staging
     title: Upgrading Staging Release
@@ -175,9 +176,9 @@ steps:
       - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-staging
     when:
       condition:
-        all:
-          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
-          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
+        any:
+          stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
   RunStagingDVTs:
     stage: staging
     title: Running DVTS on Staging Release
@@ -186,9 +187,9 @@ steps:
       - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo@FirstKubernetes -v NAMESPACE=dustinvb-staging -v SERVICES='vote result' -v RELEASE_NAME='example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'
     when:
       condition:
-        all:
-          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
-          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
+        any:
+          stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
   NotifySlackChannelStaging:
     title: Sending Slack Notification for Staging Upgrade
     image: cloudposse/slack-notifier
@@ -214,9 +215,9 @@ steps:
       - SLACK_FIELD3_VALUE=https://github.com/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}/releases/tag/${{CF_RELEASE_TAG}}
     when:
       condition:
-        all:
-          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
-          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
+        any:
+          stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
   UpgradeProductionRelease:
     stage: production
     title: Upgrading Production Release

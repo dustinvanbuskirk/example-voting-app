@@ -117,11 +117,20 @@ steps:
     title: Sending Slack Notification for Pull Request Environment
     image: cloudposse/slack-notifier
     environment:
-      - SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
+      - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
       - SLACK_USER_NAME=codefresh
-      - SLACK_ICON_EMOJI=":codefresh:"
-      - SLACK_TITLE="Pull Request Environment Deployed for ${{CF_BRANCH_TAG_NORMALIZED}}"
-      - SLACK_TITLE_LINK="https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}/services"
+      - "SLACK_ICON_EMOJI=:superfresh:"
+      - SLACK_TITLE=Pull Request Environment Deployed for ${{CF_BRANCH}}
+      - SLACK_TITLE_LINK=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}/services
+      - SLACK_FOOTER_ICON=https://pbs.twimg.com/profile_images/859843681553178624/AHcBc6EG_400x400.jpg
+      - SLACK_THUMB_URL=https://pbs.twimg.com/profile_images/699752011428810753/ayRqrKW1_400x400.png
+      - SLACK_FOOTER=Helm Deploy of example-voting-app
+      - SLACK_FIELD1_TITLE=Environment
+      - SLACK_FIELD1_VALUE=Pull Request
+      - SLACK_FIELD1_SHORT=true
+      - SLACK_FIELD2_TITLE=Version
+      - SLACK_FIELD2_VALUE=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+      - SLACK_FIELD2_SHORT=true
     when:
       condition:
         any:
@@ -145,7 +154,7 @@ steps:
     image: codefresh/cfstep-helm:2.10.0
     working_directory: ./
     environment:
-      - CHART_NAME=h.cfcr.io/dustinvanbuskirk/default/example-voting-app
+      - CHART_NAME=https://h.cfcr.io/dustinvanbuskirk/default/example-voting-app
       - RELEASE_NAME=example-voting-app
       - KUBE_CONTEXT=sales-demo@FirstKubernetes
       - NAMESPACE=dustinvb-staging
@@ -160,9 +169,10 @@ steps:
       - custom_worker_image_tag=master-${{CF_SHORT_REVISION}}
       - custom_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-staging
     when:
-      branch:
-        only:
-          - master
+      condition:
+        all:
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
+          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   RunStagingDVTs:
     stage: staging
     title: Running DVTS on Staging Release
@@ -170,29 +180,39 @@ steps:
     commands:
       - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo@FirstKubernetes -v NAMESPACE=dustinvb-staging -v SERVICES='vote result' -v RELEASE_NAME='example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'
     when:
-      branch:
-        only:
-          - master
+      condition:
+        all:
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
+          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   NotifySlackChannelStaging:
     title: Sending Slack Notification for Staging Upgrade
     image: cloudposse/slack-notifier
     environment:
-      - SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
+      - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
       - SLACK_USER_NAME=codefresh
-      - SLACK_ICON_EMOJI=":codefresh:"
-      - SLACK_TITLE="Staging Upgraded to ${{CF_BRANCH_TAG_NORMALIZED}}"
-      - SLACK_TITLE_LINK="https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/example-voting-app/services" 
+      - "SLACK_ICON_EMOJI=:superfresh:"
+      - SLACK_TITLE=Staging Upgraded
+      - SLACK_TITLE_LINK=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/example-voting-app/services
+      - SLACK_FOOTER_ICON=https://pbs.twimg.com/profile_images/859843681553178624/AHcBc6EG_400x400.jpg
+      - SLACK_THUMB_URL=https://pbs.twimg.com/profile_images/699752011428810753/ayRqrKW1_400x400.png
+      - SLACK_FIELD1_TITLE=Environment
+      - SLACK_FIELD1_VALUE=Staging
+      - SLACK_FIELD1_SHORT=true
+      - SLACK_FIELD2_TITLE=Version
+      - SLACK_FIELD2_VALUE=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+      - SLACK_FIELD2_SHORT=true
     when:
-      branch:
-        only:
-          - master
+      condition:
+        all:
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
+          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   UpgradeProductionRelease:
     stage: production
     title: Upgrading Production Release
     image: codefresh/cfstep-helm:2.10.0
     working_directory: ./
     environment:
-      - CHART_NAME=h.cfcr.io/dustinvanbuskirk/default/example-voting-app
+      - CHART_NAME=https://h.cfcr.io/dustinvanbuskirk/default/example-voting-app
       - RELEASE_NAME=example-voting-app
       - KUBE_CONTEXT=sales-prod@FirstKubernetes
       - NAMESPACE=dustinvb-production
@@ -209,8 +229,8 @@ steps:
     when:
       condition:
         all:
-          semverTag: 'match("${{CF_BRANCH}}", "^v([0-9]+)([.][0-9]+){1,2}$", true) == true'
-          masterBranch: '"${{CF_BASE_BRANCH}}" == "master"'
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   RunProductionDVTs:
     stage: production
     title: Running DVTS on Production Release
@@ -220,19 +240,27 @@ steps:
     when:
       condition:
         all:
-          semverTag: 'match("${{CF_BRANCH}}", "^v([0-9]+)([.][0-9]+){1,2}$", true) == true'
-          masterBranch: '"${{CF_BASE_BRANCH}}" == "master"'
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 
   NotifySlackChannelProduction:
     title: Sending Slack Notification for Production Upgrade
     image: cloudposse/slack-notifier
     environment:
-      - SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
+      - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
       - SLACK_USER_NAME=codefresh
-      - SLACK_ICON_EMOJI=":codefresh:"
-      - SLACK_TITLE="Production Upgraded to ${{CF_BRANCH_TAG_NORMALIZED}}"
-      - SLACK_TITLE_LINK="https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/example-voting-app/services"
+      - "SLACK_ICON_EMOJI=:superfresh:"
+      - SLACK_TITLE=Production Upgraded
+      - SLACK_TITLE_LINK=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/example-voting-app/services
+      - SLACK_FOOTER_ICON=https://pbs.twimg.com/profile_images/859843681553178624/AHcBc6EG_400x400.jpg
+      - SLACK_THUMB_URL=https://pbs.twimg.com/profile_images/699752011428810753/ayRqrKW1_400x400.png
+      - SLACK_FIELD1_TITLE=Environment
+      - SLACK_FIELD1_VALUE=Production
+      - SLACK_FIELD1_SHORT=true
+      - SLACK_FIELD2_TITLE=Version
+      - SLACK_FIELD2_VALUE=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+      - SLACK_FIELD2_SHORT=true
     when:
       condition:
         all:
-          semverTag: 'match("${{CF_BRANCH}}", "^v([0-9]+)([.][0-9]+){1,2}$", true) == true'
-          masterBranch: '"${{CF_BASE_BRANCH}}" == "master"' 
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+          masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 

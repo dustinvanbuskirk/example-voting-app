@@ -9,8 +9,8 @@ steps:
     type: parallel
     stage: build
     steps:
-      BuildResultsImage:
-        title: Building Results Image
+      BuildResultImage:
+        title: Building Result Image
         type: build
         image_name: example-voting-app/result
         working_directory: ./result/

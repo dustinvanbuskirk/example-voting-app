@@ -16,3 +16,20 @@ steps:
             - Latency: ".46" 
             - Test_Coverage: "68%"
             - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
+  TwistlockScan:
+    title: Scanning Docker image
+    image: codefresh/cfstep-twistlock
+    environment:
+      - TL_REGISTRY=r.cf-cd.com
+      - TL_IMAGE_NAME=example-voting-app/worker
+      - TL_IMAGE_TAG=${{CF_BRANCH_TAG_NORMALIZED}}
+    on_success:
+      metadata:
+        set:
+          - ${{BuildingDockerImage.imageId}}:
+            - SECURITY_SCAN: true
+    on_fail: 
+      metadata: 
+        set: 
+          - ${{BuildingDockerImage.imageId}}: 
+            - SECURITY_SCAN: false    

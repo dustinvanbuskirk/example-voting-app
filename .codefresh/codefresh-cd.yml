@@ -16,6 +16,15 @@ steps:
         working_directory: ./result/
         dockerfile: Dockerfile
         tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+        on_success:
+          metadata:
+            set:
+              - '${{BuildResultImage.imageId}}':
+                - CF_QUALITY: true
+                - Performance: true
+                - Latency: ".89" 
+                - Test_Coverage: "83%"
+                - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
       BuildVoteImage:
         title: Building Vote Image
         type: build
@@ -23,6 +32,15 @@ steps:
         working_directory: ./vote/
         dockerfile: Dockerfile
         tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+        on_success:
+          metadata:
+            set:
+              - '${{BuildVoteImage.imageId}}':
+                - CF_QUALITY: true
+                - Performance: true
+                - Latency: ".77" 
+                - Test_Coverage: "90%"
+                - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
       BuildWorkerImage:
         title: Building Worker Image
         type: build
@@ -30,6 +48,15 @@ steps:
         working_directory: ./worker/
         dockerfile: Dockerfile
         tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+        on_success:
+          metadata:
+            set:
+              - '${{BuildWorkerImage.imageId}}':
+                - CF_QUALITY: true
+                - Performance: true
+                - Latency: ".46" 
+                - Test_Coverage: "68%"
+                - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
       BuildTestImage:
         title: Building Test Image
         type: build

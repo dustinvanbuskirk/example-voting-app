@@ -7,3 +7,12 @@ steps:
     working_directory: ./worker/
     tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
     dockerfile: Dockerfile
+    on_success:
+      metadata:
+        set:
+          - '${{BuildingDockerImage.imageId}}':
+            - CF_QUALITY: true
+            - Performance: true
+            - Latency: ".46" 
+            - Test_Coverage: "68%"
+            - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"

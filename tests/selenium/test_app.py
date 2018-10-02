@@ -32,7 +32,7 @@ def browser():
 
 def test_confirm_vote_title(browser):
     browser.get("http://{}:80".format(vote_endpoint_ip))
-    assert "Helm vs Serverless!" in browser.title
+    assert "Apple vs Banana!" in browser.title
 
 
 def test_confirm_vote_choice_form(browser):

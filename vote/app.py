@@ -5,8 +5,8 @@ import socket
 import random
 import json
 
-option_a = os.getenv('OPTION_A', "CircleCI")
-option_b = os.getenv('OPTION_B', "Codefresh")
+option_a = os.getenv('OPTION_A', "Godzilla")
+option_b = os.getenv('OPTION_B', "King Kong")
 hostname = socket.gethostname()
 
 app = Flask(__name__)

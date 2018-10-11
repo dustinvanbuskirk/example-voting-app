@@ -19,7 +19,6 @@ steps:
   CheckClair:
     image: codefresh/cfstep-paclair:3.0.0
     environment:
-      - CF_ACCOUNT=dustinvanbuskirk
       - IMAGE=example-voting-app/result
       - TAG=${{CF_BRANCH_TAG_NORMALIZED}}
   ArchiveReport:

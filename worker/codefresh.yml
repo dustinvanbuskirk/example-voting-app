@@ -17,12 +17,11 @@ steps:
             - Test_Coverage: "68%"
             - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
   CheckClair:
-    image: dustinvanbuskirk/paclair:test-1
+    image: codefresh/cfstep-paclair:3.0.0
     environment:
       - CF_ACCOUNT=dustinvanbuskirk
       - IMAGE=example-voting-app/worker
       - TAG=${{CF_BRANCH_TAG_NORMALIZED}}
-      
   ArchiveReport:
     image: mesosphere/aws-cli
     commands:

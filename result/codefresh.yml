@@ -16,3 +16,18 @@ steps:
             - Latency: ".89" 
             - Test_Coverage: "83%"
             - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
+  CheckClair:
+    image: codefresh/cfstep-paclair:3.0.0
+    environment:
+      - CF_ACCOUNT=dustinvanbuskirk
+      - IMAGE=example-voting-app/result
+      - TAG=${{CF_BRANCH_TAG_NORMALIZED}}
+  ArchiveReport:
+    image: mesosphere/aws-cli
+    commands:
+      - aws s3 cp ./reports/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}.html --acl public-read
+    on_success:
+     metadata:
+        set:
+          - ${{BuildingDockerImage.imageId}}:
+              - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}.html"

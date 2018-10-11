@@ -16,20 +16,17 @@ steps:
             - Latency: ".46" 
             - Test_Coverage: "68%"
             - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
-  TwistlockScan:
-    title: Scanning Docker image
-    image: codefresh/cfstep-twistlock
+  CheckClair:
+    image: codefresh/cfstep-paclair:3.0.0
     environment:
-      - TL_REGISTRY=r.cf-cd.com
-      - TL_IMAGE_NAME=example-voting-app/worker
-      - TL_IMAGE_TAG=${{CF_BRANCH_TAG_NORMALIZED}}
+      - IMAGE=example-voting-app/worker
+      - TAG=${{CF_BRANCH_TAG_NORMALIZED}}
+  ArchiveReport:
+    image: mesosphere/aws-cli
+    commands:
+      - aws s3 cp ./reports/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}.html --acl public-read
     on_success:
-      metadata:
+     metadata:
         set:
           - ${{BuildingDockerImage.imageId}}:
-            - SECURITY_SCAN: true
-    on_fail: 
-      metadata: 
-        set: 
-          - ${{BuildingDockerImage.imageId}}: 
-            - SECURITY_SCAN: false    
+              - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}.html"

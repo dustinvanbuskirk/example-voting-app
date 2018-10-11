@@ -22,9 +22,7 @@ steps:
       - CF_ACCOUNT=dustinvanbuskirk
       - IMAGE=example-voting-app/worker
       - TAG=${{CF_BRANCH_TAG_NORMALIZED}}
-      - CLAIR_URL=${{URL}}
-      - REGISTRY_USERNAME=${{USERNAME}}
-      - REGISTRY_PASSWORD=${{PASSWORD}}
+      
   ArchiveReport:
     image: mesosphere/aws-cli
     commands:

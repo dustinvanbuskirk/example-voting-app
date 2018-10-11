@@ -5,8 +5,8 @@ import socket
 import random
 import json
 
-option_a = os.getenv('OPTION_A', "Kubernetes")
-option_b = os.getenv('OPTION_B', "Helm")
+option_a = os.getenv('OPTION_A', "ACR")
+option_b = os.getenv('OPTION_B', "ECR")
 hostname = socket.gethostname()
 
 app = Flask(__name__)

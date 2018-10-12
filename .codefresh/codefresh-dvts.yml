@@ -61,9 +61,9 @@ steps:
         command: bash -c 'IFS=" " read -a browserarray <<< "${{BROWSERS}}" && for browser in "$${browserarray[@]}"; do BROWSER=$$browser python -m pytest -vvv --alluredir=${{CF_VOLUME_PATH}}/allure-results ./tests/selenium/test_app.py; done'
         volumes:
           - '${{CF_VOLUME_NAME}}:/codefresh/volume'
- GenerateTestReporting:
-   title: Generating Test Reporting
-   image: codefresh/cf-docker-test-reporting
-   working_directory: '${{CF_VOLUME_PATH}}/'
-   environment:
-     - CF_BUILD_ID=CF_ORIG_BUILD_ID'
+  GenerateTestReporting:
+    title: Generating Test Reporting
+    image: codefresh/cf-docker-test-reporting
+    working_directory: '${{CF_VOLUME_PATH}}/'
+    environment:
+      - CF_BUILD_ID=CF_ORIG_BUILD_ID'

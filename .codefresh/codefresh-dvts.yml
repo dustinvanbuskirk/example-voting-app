@@ -66,4 +66,4 @@ steps:
     image: codefresh/cf-docker-test-reporting
     working_directory: '${{CF_VOLUME_PATH}}/'
     environment:
-      - CF_BUILD_ID=CF_ORIG_BUILD_ID'
+      - CF_BUILD_ID=${{CF_ORIG_BUILD_ID}}'

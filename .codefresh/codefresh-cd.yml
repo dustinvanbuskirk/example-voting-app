@@ -114,7 +114,7 @@ steps:
     stage: "pull request"
     image: 'codefresh/cli:latest'
     commands:
-      - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo@FirstKubernetes -v NAMESPACE=dustinvb-pull-requests -v SERVICES='vote result' -v RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}' -v TEST_IMAGE='example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}' -v ORIG_CF_BUILD_ID='${{CF_BUILD_ID}}'
+      - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo@FirstKubernetes -v NAMESPACE=dustinvb-pull-requests -v SERVICES='vote result' -v RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}' -v TEST_IMAGE='example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
     when:
       condition:
         any:

@@ -1,11 +1,11 @@
 version: '1.0'
 steps:
   RemoveExistingTestReports:
-   title: Removing Previous Test Reports
-   image: alpine
-   commands:
-    - cd '${{CF_VOLUME_PATH}}/'
-    - rm -r -f allure-results
+    title: Removing Previous Test Reports
+    image: alpine
+    commands:
+      - cd '${{CF_VOLUME_PATH}}/'
+      - rm -r -f allure-results
   GetKubernetesServicesEndpoints:
     title: Getting Kubernetes Services Endpoints
     image: codefresh/cfstep-helm

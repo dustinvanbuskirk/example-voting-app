@@ -180,7 +180,9 @@ steps:
     when:
       condition:
         any:
-          isPRevent: "'${{CF_PULL_REQUEST_ACTION}}' != '${{CF_PULL_REQUEST_ACTION}}'"
+          isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
+          isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
+          isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
       steps:
         - name: ArchiveResultClairReport
           on:

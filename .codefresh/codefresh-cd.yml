@@ -163,18 +163,16 @@ steps:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
-    when:
-      all:
-        steps:
-          - name: ArchiveResultClairReport
-            on:
-              - success
-          - name: ArchiveVoteClairReport
-            on:
-              - success
-          - name: ArchiveWorkerClairReport
-            on:
-              - success
+      steps:
+        - name: ArchiveResultClairReport
+          on:
+            - success
+        - name: ArchiveVoteClairReport
+          on:
+            - success
+        - name: ArchiveWorkerClairReport
+          on:
+            - success
   DeployPRRelease:
     stage: "pull request"
     title: Create Ephemeral Helm Release for Pull Request
@@ -201,17 +199,16 @@ steps:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
-      all:
-        steps:
-          - name: ArchiveResultClairReport
-            on:
-              - success
-          - name: ArchiveVoteClairReport
-            on:
-              - success
-          - name: ArchiveWorkerClairReport
-            on:
-              - success
+      steps:
+        - name: ArchiveResultClairReport
+          on:
+            - success
+        - name: ArchiveVoteClairReport
+          on:
+            - success
+        - name: ArchiveWorkerClairReport
+          on:
+            - success
   RunPRDVTs:
     stage: "pull request"
     image: 'codefresh/cli:latest'

@@ -218,12 +218,6 @@ steps:
         - name: NotifyGitHubPREnvCreating
           on:
             - success
-        - name: ArchiveVoteClairReport
-          on:
-            - success
-        - name: ArchiveWorkerClairReport
-          on:
-            - success
   RunPRDVTs:
     stage: "pull request"
     image: 'codefresh/cli:latest'
@@ -287,6 +281,16 @@ steps:
       - CHART_REF=example-voting-app
       - CHART_VERSION=${{CF_RELEASE_TAG}}
     when:
+      steps:
+        - name: ArchiveResultClairReport
+          on:
+            - success
+        - name: ArchiveVoteClairReport
+          on:
+            - success
+        - name: ArchiveWorkerClairReport
+          on:
+            - success
       condition:
         any:
           stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"

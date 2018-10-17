@@ -294,7 +294,7 @@ steps:
       steps:
         - name: RunPRDVTs
           on:
-            - finish
+            - finished
   UpgradeStagingRelease:
     stage: staging
     title: Upgrading Staging Release

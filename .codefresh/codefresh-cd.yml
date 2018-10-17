@@ -24,6 +24,11 @@ steps:
             - Latency: ".89" 
             - Test_Coverage: "83%"
             - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
+    when:
+      steps:
+        - name: main_clone
+          on:
+            - success
   BuildVoteImage:
     title: Building Vote Image
     type: build
@@ -41,6 +46,11 @@ steps:
             - Latency: ".77" 
             - Test_Coverage: "90%"
             - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
+    when:
+      steps:
+        - name: main_clone
+          on:
+            - success
   BuildWorkerImage:
     title: Building Worker Image
     type: build
@@ -58,6 +68,11 @@ steps:
             - Latency: ".46" 
             - Test_Coverage: "68%"
             - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
+    when:
+      steps:
+        - name: main_clone
+          on:
+            - success
   BuildTestImage:
     title: Building Test Image
     type: build
@@ -66,6 +81,11 @@ steps:
     working_directory: ./tests/
     dockerfile: Dockerfile
     tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+    when:
+      steps:
+        - name: main_clone
+          on:
+            - success
   ScanResultImage:
     image: codefresh/cfstep-paclair:3.0.0
     stage: "security scans"

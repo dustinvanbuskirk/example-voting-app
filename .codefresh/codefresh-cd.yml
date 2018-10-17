@@ -3,83 +3,83 @@ mode: parallel
 stages:
   - build
   - "security scans"
-  - reporting
   - "pull request"
   - staging
   - production
 steps:
-  BuildingMicroServices:
-    type: parallel
+  BuildResultImage:
+    title: Building Result Image
+    type: build
     stage: build
-    steps:
-      BuildResultImage:
-        title: Building Result Image
-        type: build
-        image_name: example-voting-app/result
-        working_directory: ./result/
-        dockerfile: Dockerfile
-        tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
-        on_success:
-          metadata:
-            set:
-              - '${{BuildResultImage.imageId}}':
-                - CF_QUALITY: true
-                - Performance: true
-                - Latency: ".89" 
-                - Test_Coverage: "83%"
-                - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
-      BuildVoteImage:
-        title: Building Vote Image
-        type: build
-        image_name: example-voting-app/vote
-        working_directory: ./vote/
-        dockerfile: Dockerfile
-        tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
-        on_success:
-          metadata:
-            set:
-              - '${{BuildVoteImage.imageId}}':
-                - CF_QUALITY: true
-                - Performance: true
-                - Latency: ".77" 
-                - Test_Coverage: "90%"
-                - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
-      BuildWorkerImage:
-        title: Building Worker Image
-        type: build
-        image_name: example-voting-app/worker
-        working_directory: ./worker/
-        dockerfile: Dockerfile
-        tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
-        on_success:
-          metadata:
-            set:
-              - '${{BuildWorkerImage.imageId}}':
-                - CF_QUALITY: true
-                - Performance: true
-                - Latency: ".46" 
-                - Test_Coverage: "68%"
-                - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
-      BuildTestImage:
-        title: Building Test Image
-        type: build
-        image_name: example-voting-app/tests
-        working_directory: ./tests/
-        dockerfile: Dockerfile
-        tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
-    fail_fast: true
+    image_name: example-voting-app/result
+    working_directory: ./result/
+    dockerfile: Dockerfile
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+    on_success:
+      metadata:
+        set:
+          - '${{BuildResultImage.imageId}}':
+            - CF_QUALITY: true
+            - Performance: true
+            - Latency: ".89" 
+            - Test_Coverage: "83%"
+            - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
+  BuildVoteImage:
+    title: Building Vote Image
+    type: build
+    stage: build
+    image_name: example-voting-app/vote
+    working_directory: ./vote/
+    dockerfile: Dockerfile
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+    on_success:
+      metadata:
+        set:
+          - '${{BuildVoteImage.imageId}}':
+            - CF_QUALITY: true
+            - Performance: true
+            - Latency: ".77" 
+            - Test_Coverage: "90%"
+            - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
+  BuildWorkerImage:
+    title: Building Worker Image
+    type: build
+    stage: build
+    image_name: example-voting-app/worker
+    working_directory: ./worker/
+    dockerfile: Dockerfile
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+    on_success:
+      metadata:
+        set:
+          - '${{BuildWorkerImage.imageId}}':
+            - CF_QUALITY: true
+            - Performance: true
+            - Latency: ".46" 
+            - Test_Coverage: "68%"
+            - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
+  BuildTestImage:
+    title: Building Test Image
+    type: build
+    stage: build
+    image_name: example-voting-app/tests
+    working_directory: ./tests/
+    dockerfile: Dockerfile
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
   ScanResultImage:
     image: codefresh/cfstep-paclair:3.0.0
+    stage: "security scans"
     environment:
       - IMAGE=example-voting-app/result
       - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
     when:
       steps:
-       - name: BuildResultImage
-         on:
-           - success 
+        - name: BuildResultImage
+          on:
+            - success 
   ScanVoteImage:
     image: codefresh/cfstep-paclair:3.0.0
+    stage: "security scans"
     environment:
       - IMAGE=example-voting-app/vote
       - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
@@ -90,6 +90,7 @@ steps:
            - success 
   ScanWorkerImage:
     image: codefresh/cfstep-paclair:3.0.0
+    stage: "security scans"
     environment:
       - IMAGE=example-voting-app/worker
       - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
@@ -100,6 +101,7 @@ steps:
            - success 
   ArchiveResultClairReport:
     image: mesosphere/aws-cli
+    stage: "security scans"
     commands:
       - aws s3 cp ./reports/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
     on_success:
@@ -109,11 +111,12 @@ steps:
             - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
     when:
       steps:
-       - name: ScanResultImage
-         on:
-           - success 
+        - name: ScanResultImage
+          on:
+            - success 
   ArchiveVoteClairReport:
     image: mesosphere/aws-cli
+    stage: "security scans"
     commands:
       - aws s3 cp ./reports/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
     on_success:
@@ -123,11 +126,12 @@ steps:
             - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
     when:
       steps:
-       - name: ScanVoteImage
-         on:
-           - success 
+        - name: ScanVoteImage
+          on:
+            - success 
   ArchiveWorkerClairReport:
     image: mesosphere/aws-cli
+    stage: "security scans"
     commands:
       - aws s3 cp ./reports/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
     on_success:
@@ -137,9 +141,9 @@ steps:
             - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
     when:
       steps:
-       - name: ScanWorkerImage
-         on:
-           - success 
+        - name: ScanWorkerImage
+          on:
+            - success 
   NotifyGitHubPREnvCreating:
     title: Set Pull Request Environment pending
     image: cloudposse/github-status-updater
@@ -159,6 +163,17 @@ steps:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
+      all:
+        steps:
+          - name: ArchiveResultClairReport
+            on:
+              - success
+          - name: ArchiveVoteClairReport
+            on:
+              - success
+          - name: ArchiveWorkerClairReport
+            on:
+              - success
   DeployPRRelease:
     stage: "pull request"
     title: Create Ephemeral Helm Release for Pull Request
@@ -185,6 +200,17 @@ steps:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
+      all:
+        steps:
+          - name: ArchiveResultClairReport
+            on:
+              - success
+          - name: ArchiveVoteClairReport
+            on:
+              - success
+          - name: ArchiveWorkerClairReport
+            on:
+              - success
   RunPRDVTs:
     stage: "pull request"
     image: 'codefresh/cli:latest'
@@ -196,6 +222,10 @@ steps:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
+      steps:
+        - name: DeployPRRelease
+          on:
+            - success 
   NotifyGitHubPREnvCreated:
     title: Set Pull Request Environment URL
     image: cloudposse/github-status-updater
@@ -215,6 +245,10 @@ steps:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
+      steps:
+        - name: RunPRDVTs
+          on:
+            - success 
   NotifySlackChannelPR:
     title: Sending Slack Notification for Pull Request Environment
     image: cloudposse/slack-notifier
@@ -242,6 +276,10 @@ steps:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
+      steps:
+        - name: RunPRDVTs
+          on:
+            - success 
   PushChartToHelmRepository:
     stage: staging
     title: Push Helm Chart to Repository
@@ -255,6 +293,10 @@ steps:
         any:
           stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+      steps:
+        - name: RunPRDVTs
+          on:
+            - finish
   UpgradeStagingRelease:
     stage: staging
     title: Upgrading Staging Release
@@ -281,6 +323,10 @@ steps:
         any:
           stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+      steps:
+        - name: PushChartToHelmRepository
+          on:
+            - success 
   RunStagingDVTs:
     stage: staging
     title: Running DVTS on Staging Release
@@ -292,6 +338,10 @@ steps:
         any:
           stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+      steps:
+        - name: UpgradeStagingRelease
+          on:
+            - success 
   NotifySlackChannelStaging:
     title: Sending Slack Notification for Staging Upgrade
     image: cloudposse/slack-notifier
@@ -320,6 +370,10 @@ steps:
         any:
           stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+      steps:
+        - name: RunStagingDVTs
+          on:
+            - success 
   UpgradeProductionRelease:
     stage: production
     title: Upgrading Production Release
@@ -345,7 +399,10 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
+      steps:
+        - name: RunStagingDVTs
+          on:
+            - success 
   RunProductionDVTs:
     stage: production
     title: Running DVTS on Production Release
@@ -356,7 +413,10 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 
+      steps:
+        - name: UpgradeProductionRelease
+          on:
+            - success 
   NotifySlackChannelProduction:
     title: Sending Slack Notification for Production Upgrade
     image: cloudposse/slack-notifier
@@ -384,4 +444,7 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 
+      steps:
+        - name: RunProductionDVTs
+          on:
+            - success 

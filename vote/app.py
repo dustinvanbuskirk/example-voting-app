@@ -5,7 +5,7 @@ import socket
 import random
 import json
 
-option_a = os.getenv('OPTION_A', "JenkinsX")
+option_a = os.getenv('OPTION_A', "Jenkins")
 option_b = os.getenv('OPTION_B', "Codefresh")
 hostname = socket.gethostname()
 

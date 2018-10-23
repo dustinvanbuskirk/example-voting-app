@@ -32,7 +32,7 @@ def browser():
 
 def test_confirm_vote_title(browser):
     browser.get("http://{}:80".format(vote_endpoint_ip))
-    assert "Google vs Azure!" in browser.title
+    assert "GCR vs CFCR!" in browser.title
 
 
 def test_confirm_vote_choice_form(browser):

@@ -5,7 +5,7 @@ import socket
 import random
 import json
 
-option_a = os.getenv('OPTION_A', "Gitlab")
+option_a = os.getenv('OPTION_A', "Subversion")
 option_b = os.getenv('OPTION_B', "GitHub")
 hostname = socket.gethostname()
 

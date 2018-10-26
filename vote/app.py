@@ -5,8 +5,8 @@ import socket
 import random
 import json
 
-option_a = os.getenv('OPTION_A', "Subversion")
-option_b = os.getenv('OPTION_B', "GitHub")
+option_a = os.getenv('OPTION_A', "Node")
+option_b = os.getenv('OPTION_B', "React")
 hostname = socket.gethostname()
 
 app = Flask(__name__)

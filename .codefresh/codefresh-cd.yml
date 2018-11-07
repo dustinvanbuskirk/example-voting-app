@@ -239,6 +239,7 @@ steps:
     working_directory: ./
     environment:
       - CHART_REF=example-voting-app
+      - CHART_REPO_URL=cm://h.cfcr.io/dustinvanbuskirk/default
       - CHART_VERSION=${{CF_RELEASE_TAG}}
       - RELEASE_NAME=example-voting-app
       - KUBE_CONTEXT=sales-demo@FirstKubernetes
@@ -304,6 +305,7 @@ steps:
     working_directory: ./
     environment:
       - CHART_REF=example-voting-app
+      - CHART_REPO_URL=cm://h.cfcr.io/dustinvanbuskirk/default
       - CHART_VERSION=${{CF_RELEASE_TAG}}
       - RELEASE_NAME=example-voting-app
       - KUBE_CONTEXT=sales-prod@FirstKubernetes

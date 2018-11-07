@@ -236,7 +236,7 @@ steps:
     stage: staging
     title: Upgrading Staging Release
     image: codefresh/cfstep-helm:2.10.0
-    working_directory: ./
+    working_directory: /
     environment:
       - CHART_REF=example-voting-app
       - CHART_REPO_URL=cm://h.cfcr.io/dustinvanbuskirk/default
@@ -302,7 +302,7 @@ steps:
     stage: production
     title: Upgrading Production Release
     image: codefresh/cfstep-helm:2.10.0
-    working_directory: ./
+    working_directory: /
     environment:
       - CHART_REF=example-voting-app
       - CHART_REPO_URL=cm://h.cfcr.io/dustinvanbuskirk/default

@@ -91,14 +91,19 @@ steps:
     stage: reporting
     steps:
       ArchiveResultClairReport:
-        image: mesosphere/aws-cli
-        commands:
-          - aws s3 cp ./reports/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
-        on_success:
-          metadata:
-            set:
-              - ${{BuildResultImage.imageId}}:
-                - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
+        # image: mesosphere/aws-cli
+        # commands:
+        #   - aws s3 cp ./reports/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
+        # on_success:
+        #   metadata:
+        #     set:
+        #       - ${{BuildResultImage.imageId}}:
+        #         - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
+        title: Upload Result Clair Report
+        image: codefresh/cf-docker-test-reporting
+        environment:
+          - REPORT_DIR=reports
+          - REPORT_INDEX_FILE=clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html
       ArchiveVoteClairReport:
         image: mesosphere/aws-cli
         commands:

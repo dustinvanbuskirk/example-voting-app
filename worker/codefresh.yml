@@ -5,7 +5,7 @@ steps:
     type: build
     image_name: example-voting-app/worker
     working_directory: ./worker/
-    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
     dockerfile: Dockerfile
     on_success:
       metadata:
@@ -20,7 +20,7 @@ steps:
     image: codefresh/cfstep-paclair:3.0.0
     environment:
       - IMAGE=example-voting-app/worker
-      - TAG=${{CF_BRANCH_TAG_NORMALIZED}}
+      - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
   ArchiveReport:
     title: Upload Clair Report
     image: codefresh/cf-docker-test-reporting

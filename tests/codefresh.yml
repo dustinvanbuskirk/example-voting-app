@@ -5,5 +5,5 @@ steps:
     type: build
     image_name: example-voting-app/tests
     working_directory: ./tests/
-    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
     dockerfile: Dockerfile

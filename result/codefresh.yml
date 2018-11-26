@@ -21,8 +21,14 @@ steps:
     environment:
       - IMAGE=example-voting-app/result
       - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+    on_success:
+     metadata:
+        set:
+          - ${{BuildingDockerImage.imageId}}:
+              - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
   ArchiveReport:
     title: Upload Clair Report
     image: codefresh/cf-docker-test-reporting
+    working_directory: ./reports
     environment:
-      - REPORT_INDEX_FILE=./reports/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html
+      - REPORT_INDEX_FILE=clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html

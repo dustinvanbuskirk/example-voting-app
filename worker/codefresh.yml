@@ -25,4 +25,4 @@ steps:
     title: Upload Clair Report
     image: codefresh/cf-docker-test-reporting
     environment:
-      - REPORT_INDEX_FILE=clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html
+      - REPORT_INDEX_FILE=./reports/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html

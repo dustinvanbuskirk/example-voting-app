@@ -89,6 +89,7 @@ steps:
   GenerateReportsIndexHTML:
     image: alpine
     commands:
+      - apk add tree
       - tree -H "./reports" -L 1 > ./reports/index.html
     # type: parallel
     # steps:

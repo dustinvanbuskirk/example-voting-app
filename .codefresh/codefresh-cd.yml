@@ -90,7 +90,7 @@ steps:
     image: alpine
     commands:
       - apk add tree
-      - tree -H "./reports" -L 1 > ./reports/index.html
+      - tree ./reports -H "." -T "Clair Reports" -L 1 > ./reports/index.html
     # type: parallel
     # steps:
   ArchiveClairReports:

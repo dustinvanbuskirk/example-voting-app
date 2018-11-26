@@ -88,9 +88,8 @@ steps:
           - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
   ArchiveClairReports:
     type: parallel
-    stage: reporting
     steps:
-      ArchiveResultClairReport:
+      ArchiveClairReports:
         # image: mesosphere/aws-cli
         # commands:
         #   - aws s3 cp ./reports/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
@@ -99,12 +98,11 @@ steps:
         #     set:
         #       - ${{BuildResultImage.imageId}}:
         #         - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
-        title: Upload Result Clair Report
+        title: Upload Clair Reports
         image: codefresh/cf-docker-test-reporting
         environment:
           - REPORT_DIR=reports
-          - REPORT_INDEX_FILE=clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html
-      ArchiveVoteClairReport:
+      # ArchiveVoteClairReport:
         # image: mesosphere/aws-cli
         # commands:
         #   - aws s3 cp ./reports/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
@@ -113,12 +111,7 @@ steps:
         #     set:
         #       - ${{BuildVoteImage.imageId}}:
         #         - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
-        title: Upload Vote Clair Report
-        image: codefresh/cf-docker-test-reporting
-        environment:
-          - REPORT_DIR=reports
-          - REPORT_INDEX_FILE=clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html
-      ArchiveWorkerClairReport:
+      # ArchiveWorkerClairReport:
         # image: mesosphere/aws-cli
         # commands:
         #   - aws s3 cp ./reports/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
@@ -127,11 +120,6 @@ steps:
         #     set:
         #       - ${{BuildWorkerImage.imageId}}:
         #         - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
-        title: Upload Worker Clair Report
-        image: codefresh/cf-docker-test-reporting
-        environment:
-          - REPORT_DIR=reports
-          - REPORT_INDEX_FILE=clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html
   NotifyGitHubPREnvCreating:
     title: Set Pull Request Environment pending
     image: cloudposse/github-status-updater

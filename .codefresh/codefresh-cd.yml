@@ -2,7 +2,6 @@ version: '1.0'
 stages:
   - build
   - "security scans"
-  - reporting
   - "pull request"
   - staging
   - production
@@ -76,47 +75,42 @@ steps:
         environment:
           - IMAGE=example-voting-app/result
           - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+        on_success:
+          metadata:
+            set:
+              - ${{BuildResultImage.imageId}}:
+                - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
       ScanVoteImage:
         image: codefresh/cfstep-paclair:3.0.0
         environment:
           - IMAGE=example-voting-app/vote
           - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+        on_success:
+          metadata:
+            set:
+              - ${{BuildVoteImage.imageId}}:
+                - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
       ScanWorkerImage:
         image: codefresh/cfstep-paclair:3.0.0
         environment:
           - IMAGE=example-voting-app/worker
           - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-  ArchiveClairReports:
-    type: parallel
-    stage: reporting
-    steps:
-      ArchiveResultClairReport:
-        image: mesosphere/aws-cli
-        commands:
-          - aws s3 cp ./reports/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
-        on_success:
-          metadata:
-            set:
-              - ${{BuildResultImage.imageId}}:
-                - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
-      ArchiveVoteClairReport:
-        image: mesosphere/aws-cli
-        commands:
-          - aws s3 cp ./reports/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
-        on_success:
-          metadata:
-            set:
-              - ${{BuildVoteImage.imageId}}:
-                - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
-      ArchiveWorkerClairReport:
-        image: mesosphere/aws-cli
-        commands:
-          - aws s3 cp ./reports/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
         on_success:
           metadata:
             set:
               - ${{BuildWorkerImage.imageId}}:
-                - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
+                - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
+  GenerateReportsIndexHTML:
+    image: alpine
+    commands:
+      - apk add tree
+      - tree ./reports -H "." -T "Clair Reports" -L 1 > ./reports/index.html
+  ArchiveClairReports:
+    title: Upload Clair Reports
+    image: codefresh/cf-docker-test-reporting
+    environment:
+      - REPORT_DIR=reports
+      - REPORT_INDEX_FILE=index.html
   NotifyGitHubPREnvCreating:
     title: Set Pull Request Environment pending
     image: cloudposse/github-status-updater
@@ -324,7 +318,6 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   RunProductionDVTs:
     stage: production
     title: Running DVTS on Production Release
@@ -335,7 +328,6 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 
   NotifySlackChannelProduction:
     title: Sending Slack Notification for Production Upgrade
     image: cloudposse/slack-notifier
@@ -363,4 +355,3 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 

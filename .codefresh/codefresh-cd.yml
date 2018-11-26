@@ -2,7 +2,6 @@ version: '1.0'
 stages:
   - build
   - "security scans"
-  - reporting
   - "pull request"
   - staging
   - production
@@ -91,40 +90,12 @@ steps:
     commands:
       - apk add tree
       - tree ./reports -H "." -T "Clair Reports" -L 1 > ./reports/index.html
-    # type: parallel
-    # steps:
   ArchiveClairReports:
-    # image: mesosphere/aws-cli
-    # commands:
-    #   - aws s3 cp ./reports/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
-    # on_success:
-    #   metadata:
-    #     set:
-    #       - ${{BuildResultImage.imageId}}:
-    #         - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
     title: Upload Clair Reports
     image: codefresh/cf-docker-test-reporting
     environment:
       - REPORT_DIR=reports
       - REPORT_INDEX_FILE=index.html
-      # ArchiveVoteClairReport:
-        # image: mesosphere/aws-cli
-        # commands:
-        #   - aws s3 cp ./reports/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
-        # on_success:
-        #   metadata:
-        #     set:
-        #       - ${{BuildVoteImage.imageId}}:
-        #         - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
-      # ArchiveWorkerClairReport:
-        # image: mesosphere/aws-cli
-        # commands:
-        #   - aws s3 cp ./reports/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
-        # on_success:
-        #   metadata:
-        #     set:
-        #       - ${{BuildWorkerImage.imageId}}:
-        #         - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
   NotifyGitHubPREnvCreating:
     title: Set Pull Request Environment pending
     image: cloudposse/github-status-updater
@@ -270,7 +241,7 @@ steps:
   RunStagingDVTs:
     stage: staging
     title: Running DVTS on Staging Release
-    image: 'codefresh/cli:0.8.79'
+    image: 'codefresh/cli:latest'
     commands:
       - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo@FirstKubernetes -v NAMESPACE=dustinvb-staging -v SERVICES='vote result' -v RELEASE_NAME='example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'
     when:
@@ -332,18 +303,16 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'"
   RunProductionDVTs:
     stage: production
     title: Running DVTS on Production Release
-    image: 'codefresh/cli:0.8.79'
+    image: 'codefresh/cli:latest'
     commands:
       - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-prod@FirstKubernetes -v NAMESPACE=dustinvb-production -v SERVICES='vote result' -v RELEASE_NAME='example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'
     when:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 
   NotifySlackChannelProduction:
     title: Sending Slack Notification for Production Upgrade
     image: cloudposse/slack-notifier
@@ -371,4 +340,3 @@ steps:
       condition:
         all:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-          #masterBranch: "'${{CF_BASE_BRANCH}}' == 'master'" 

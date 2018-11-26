@@ -86,22 +86,26 @@ steps:
         environment:
           - IMAGE=example-voting-app/worker
           - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+  GenerateReportsIndexHTML:
+    image: alpine
+    commands:
+      - tree -H "./reports" -L 1 > ./reports/index.html
+    # type: parallel
+    # steps:
   ArchiveClairReports:
-    type: parallel
-    steps:
-      ArchiveClairReports:
-        # image: mesosphere/aws-cli
-        # commands:
-        #   - aws s3 cp ./reports/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
-        # on_success:
-        #   metadata:
-        #     set:
-        #       - ${{BuildResultImage.imageId}}:
-        #         - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
-        title: Upload Clair Reports
-        image: codefresh/cf-docker-test-reporting
-        environment:
-          - REPORT_DIR=reports
+    # image: mesosphere/aws-cli
+    # commands:
+    #   - aws s3 cp ./reports/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html s3://${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html --acl public-read
+    # on_success:
+    #   metadata:
+    #     set:
+    #       - ${{BuildResultImage.imageId}}:
+    #         - CLAIR_REPORT: "https://s3.amazonaws.com/${{S3_BUCKETNAME}}/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
+    title: Upload Clair Reports
+    image: codefresh/cf-docker-test-reporting
+    environment:
+      - REPORT_DIR=reports
+      - REPORT_INDEX_FILE=index.html
       # ArchiveVoteClairReport:
         # image: mesosphere/aws-cli
         # commands:

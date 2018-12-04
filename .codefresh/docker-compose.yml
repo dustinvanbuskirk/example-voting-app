@@ -1,7 +1,7 @@
 version: '2'
 services:
   selenium_hub:
-    image: ${{PRIVATE_IMAGE}}
+    image: ${selenium_hub_image}
     ports:
       - 4444
     environment:

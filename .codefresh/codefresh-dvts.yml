@@ -16,6 +16,8 @@ steps:
     title: Running Selenium DVTs
     type: composition
     composition: .codefresh/docker-compose.yml
+    environment:
+      - selenium_hub_image=${{selenium_hub_image}}
     composition_candidates:
       test:
         image: ${{TEST_IMAGE}}

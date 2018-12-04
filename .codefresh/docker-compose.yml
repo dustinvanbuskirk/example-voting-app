@@ -1,7 +1,7 @@
 version: '2'
 services:
   selenium_hub:
-    image: ${selenium_hub_image}
+    image: r.cfcr.io/dustinvanbuskirk/example-voting-app/tests:testing-c4cc03e
     ports:
       - 4444
     environment:

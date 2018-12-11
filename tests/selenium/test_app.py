@@ -36,7 +36,6 @@ def test_confirm_vote_title(browser):
     option_b = "Swarm"
     assert "{} vs {}!".format(option_a, option_b) in browser.title
 
-
 def test_confirm_vote_choice_form(browser):
     browser.get("http://{}:80".format(vote_endpoint_ip))
     element = browser.find_element(By.ID, 'choice')

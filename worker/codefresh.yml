@@ -17,7 +17,7 @@ steps:
             - Test_Coverage: "68%"
             - JIRA: "https://codefresh-io.atlassian.net/browse/MKTG-12"
   CheckClair:
-    image: codefresh/cfstep-paclair:3.0.0
+    image: dustinvanbuskirk/paclair:demo
     environment:
       - IMAGE=example-voting-app/worker
       - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}

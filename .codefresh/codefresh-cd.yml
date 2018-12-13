@@ -71,7 +71,7 @@ steps:
     stage: "security scans"
     steps:
       ScanResultImage:
-        image: codefresh/cfstep-paclair:3.0.0
+        image: dustinvanbuskirk/paclair:demo
         environment:
           - IMAGE=example-voting-app/result
           - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
@@ -81,7 +81,7 @@ steps:
               - ${{BuildResultImage.imageId}}:
                 - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
       ScanVoteImage:
-        image: codefresh/cfstep-paclair:3.0.0
+        image: dustinvanbuskirk/paclair:demo
         environment:
           - IMAGE=example-voting-app/vote
           - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
@@ -91,7 +91,7 @@ steps:
               - ${{BuildVoteImage.imageId}}:
                 - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
       ScanWorkerImage:
-        image: codefresh/cfstep-paclair:3.0.0
+        image: dustinvanbuskirk/paclair:demo
         environment:
           - IMAGE=example-voting-app/worker
           - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}

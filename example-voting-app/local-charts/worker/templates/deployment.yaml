@@ -31,6 +31,9 @@ spec:
           - name: POSTGRES_USERNAME
             value: {{ .Values.postgresql.username | default "postgres" | quote }}
           - name: POSTGRES_PASSWORD
-            value: {{ .Values.postgresql.password | default "postgres" | quote }}
+            valueFrom:
+              secretKeyRef:
+                name: postgres
+                key: db_password
           - name: REDIS_HOST
             value: {{ .Values.redis.host | default (printf "%s-redis" ( .Release.Name )) | quote }}

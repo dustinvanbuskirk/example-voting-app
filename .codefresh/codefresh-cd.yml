@@ -130,10 +130,19 @@ steps:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
+  SOPsDecryption
+    title: Decrypt SOPs variables
+    image: dustinvanbuskirk/cfstep-helm:demo
+    commands:
+    - kubectl config use-context sales-demo@FirstKubernetes
+    - echo -e "${{GPG_PUB}}" > mygpgkey_pub.asc
+    - echo -e "${{GPG_SEC}}" > mygpgkey_sec.asc
+    - gpg --import --allow-secret-key-import mygpgkey_sec.asc
+    - helm secrets dec helm_vars/example-voting-app/dustinvb-pull-requests/worker/secrets.yaml
   DeployPRRelease:
     stage: "pull request"
     title: Create Ephemeral Helm Release for Pull Request
-    image: codefresh/cfstep-helm:2.10.0
+    image: dustinvanbuskirk/cfstep-helm:demo
     working_directory: ./
     environment:
       - CHART_REF=example-voting-app

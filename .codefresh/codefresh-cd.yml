@@ -130,7 +130,7 @@ steps:
           isPRopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'opened'"
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
-  SOPsDecryption
+  SOPsDecryption:
     title: Decrypt SOPs variables
     image: dustinvanbuskirk/cfstep-helm:demo
     commands:

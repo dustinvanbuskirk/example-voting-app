@@ -14,3 +14,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Create a default fully qualified secret name.
+*/}}
+{{- define "secret-name" -}}
+{{- printf "secret_%s_postgresql_postgresPassword" .Release.Name }}
+{{- end -}}

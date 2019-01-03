@@ -33,7 +33,7 @@ spec:
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: postgres
-                key: db_password
+                name: postgresql
+                key: password
           - name: REDIS_HOST
             value: {{ .Values.redis.host | default (printf "%s-redis" ( .Release.Name )) | quote }}

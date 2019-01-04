@@ -221,7 +221,7 @@ steps:
   PushChartToHelmRepository:
     stage: staging
     title: Push Helm Chart to Repository
-    image: codefresh/cfstep-helm:2.10.0
+    image: dustinvanbuskirk/cfstep-helm:demo
     environment:
       - ACTION=push
       - CHART_REF=example-voting-app
@@ -234,7 +234,7 @@ steps:
   UpgradeStagingRelease:
     stage: staging
     title: Upgrading Staging Release
-    image: codefresh/cfstep-helm:2.10.0
+    image: dustinvanbuskirk/cfstep-helm:demo
     working_directory: /
     environment:
       - CHART_REF=example-voting-app
@@ -244,6 +244,7 @@ steps:
       - KUBE_CONTEXT=sales-demo@FirstKubernetes
       - NAMESPACE=dustinvb-staging
       - DEBUG_CHART=true
+      - CMD_PS=-f /codefresh/volume/example-voting-app/helm_vars/example-voting-app/dustinvb-staging/worker/secrets.yaml
       - value_result_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/result
       - value_result_image_tag=master-${{CF_SHORT_REVISION}}
       - value_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-staging
@@ -253,6 +254,10 @@ steps:
       - value_worker_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/worker
       - value_worker_image_tag=master-${{CF_SHORT_REVISION}}
       - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-staging
+    commands:
+      - echo -e "${{GPG_SEC}}" > mygpgkey_sec.asc
+      - gpg --import --allow-secret-key-import mygpgkey_sec.asc
+      - /opt/bin/release_chart
     when:
       condition:
         any:
@@ -300,7 +305,7 @@ steps:
   UpgradeProductionRelease:
     stage: production
     title: Upgrading Production Release
-    image: codefresh/cfstep-helm:2.10.0
+    image: dustinvanbuskirk/cfstep-helm:demo
     working_directory: /
     environment:
       - CHART_REF=example-voting-app
@@ -310,6 +315,7 @@ steps:
       - KUBE_CONTEXT=sales-prod@FirstKubernetes
       - NAMESPACE=dustinvb-production
       - DEBUG_CHART=true
+      - CMD_PS=-f /codefresh/volume/example-voting-app/helm_vars/example-voting-app/dustinvb-production/worker/secrets.yaml
       - value_result_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/result
       - value_result_image_tag=master-${{CF_SHORT_REVISION}}
       - value_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-production
@@ -319,6 +325,10 @@ steps:
       - value_worker_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/worker
       - value_worker_image_tag=master-${{CF_SHORT_REVISION}}
       - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-production
+    commands:
+      - echo -e "${{GPG_SEC}}" > mygpgkey_sec.asc
+      - gpg --import --allow-secret-key-import mygpgkey_sec.asc
+      - /opt/bin/release_chart
     when:
       condition:
         all:

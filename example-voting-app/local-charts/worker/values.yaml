@@ -9,7 +9,6 @@ image:
 
 postgresql:
   postgresUser: postgres
-  postgresPassword: none
 
 redis:
   usePassword: false

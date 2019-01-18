@@ -338,9 +338,10 @@ steps:
       - gpg --import --allow-secret-key-import mygpgkey_sec.asc
       - /opt/bin/release_chart
     when:
-      condition:
-        all:
-          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+      steps:
+      - name: ProductionApproval
+        on:
+        - approved
   RunProductionDVTs:
     stage: production
     title: Running DVTS on Production Release
@@ -375,6 +376,7 @@ steps:
       - "SLACK_FIELD3_TITLE=:github: GitHub Release"
       - SLACK_FIELD3_VALUE=https://github.com/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}/releases/tag/${{CF_RELEASE_TAG}}
     when:
-      condition:
-        all:
-          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+      steps:
+      - name: ProductionApproval
+        on:
+        - approved

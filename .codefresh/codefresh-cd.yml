@@ -79,7 +79,7 @@ steps:
           metadata:
             set:
               - ${{BuildResultImage.imageId}}:
-                - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
+                - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/v2/5bad4b30b35f252387df1ffd/${{CF_BRANCH}}/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
       ScanVoteImage:
         image: dustinvanbuskirk/paclair:demo
         environment:
@@ -89,7 +89,7 @@ steps:
           metadata:
             set:
               - ${{BuildVoteImage.imageId}}:
-                - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
+                - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/v2/5bad4b30b35f252387df1ffd/${{CF_BRANCH}}/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
       ScanWorkerImage:
         image: dustinvanbuskirk/paclair:demo
         environment:
@@ -99,7 +99,7 @@ steps:
           metadata:
             set:
               - ${{BuildWorkerImage.imageId}}:
-                - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
+                - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/v2/5bad4b30b35f252387df1ffd/${{CF_BRANCH}}/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
   GenerateReportsIndexHTML:
     image: alpine
     commands:
@@ -302,6 +302,14 @@ steps:
         any:
           stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+  ProductionApproval:
+    type: pending-approval
+    title: Deploy to Production?
+    description: Deploys current release to production
+    when:
+      condition:
+        all:
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
   UpgradeProductionRelease:
     stage: production
     title: Upgrading Production Release
@@ -330,9 +338,10 @@ steps:
       - gpg --import --allow-secret-key-import mygpgkey_sec.asc
       - /opt/bin/release_chart
     when:
-      condition:
-        all:
-          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+      steps:
+      - name: ProductionApproval
+        on:
+        - approved
   RunProductionDVTs:
     stage: production
     title: Running DVTS on Production Release
@@ -367,6 +376,7 @@ steps:
       - "SLACK_FIELD3_TITLE=:github: GitHub Release"
       - SLACK_FIELD3_VALUE=https://github.com/${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}/releases/tag/${{CF_RELEASE_TAG}}
     when:
-      condition:
-        all:
-          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+      steps:
+      - name: ProductionApproval
+        on:
+        - approved

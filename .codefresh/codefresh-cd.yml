@@ -306,10 +306,10 @@ steps:
     type: pending-approval
     title: Deploy to Production?
     description: Deploys current release to production
-      when:
-        condition:
-          all:
-            prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+    when:
+      condition:
+        all:
+          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
   UpgradeProductionRelease:
     stage: production
     title: Upgrading Production Release

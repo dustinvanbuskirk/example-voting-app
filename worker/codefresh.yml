@@ -25,7 +25,7 @@ steps:
      metadata:
         set:
           - ${{BuildingDockerImage.imageId}}:
-              - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-worker-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
+              - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/v2/pipeline/${{CF_BRANCH}}/s3/amazon/example-voting-app/${{CF_BUILD_ID}}clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
   ArchiveReport:
     title: Upload Clair Report
     image: codefresh/cf-docker-test-reporting

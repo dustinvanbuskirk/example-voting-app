@@ -302,14 +302,14 @@ steps:
         any:
           stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
-  step_name:
-  type: pending-approval
-  title: Deploy to Production?
-  description: Deploys current release to production
-    when:
-      condition:
-        all:
-          prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+  ProductionApproval:
+    type: pending-approval
+    title: Deploy to Production?
+    description: Deploys current release to production
+      when:
+        condition:
+          all:
+            prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
   UpgradeProductionRelease:
     stage: production
     title: Upgrading Production Release

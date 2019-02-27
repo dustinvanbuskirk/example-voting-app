@@ -32,8 +32,8 @@ def browser():
 
 def test_confirm_vote_title(browser):
     browser.get("http://{}:80".format(vote_endpoint_ip))
-    option_a = "Denver"
-    option_b = "Lego Land"
+    option_a = "Seattle"
+    option_b = "Disney Land"
     assert "{} vs {}!".format(option_a, option_b) in browser.title
 
 def test_confirm_vote_choice_form(browser):

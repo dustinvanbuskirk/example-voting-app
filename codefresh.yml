@@ -1,0 +1,44 @@
+# Used for Initialization of example-voting-app pipelines
+
+version: '1.0'
+stages:
+  - "Prepare Kubernetes Cluster"
+  - "Deploy Codefresh Pipelines"
+
+steps:
+
+# Set Kubernetes Name Here
+
+  SetKubernetesCluster:
+    image: alpine
+    stage: "Prepare Kubernetes Cluster"
+    commands:
+      - cf_export KUBERNETES_CLUSTER_NAME=${{KUBERNETES_CLUSTER_NAME}}
+
+# Create 'codefresh-demo' Kubernetes Namespace
+
+  CreateCodefreshDemoNamespace:
+    image:  codefresh/cfstep-helm
+    stage: "Prepare Kubernetes Cluster"
+    commands:
+      - kubectl config use-context ${{KUBERNETES_CLUSTER_NAME}}
+      - kubectl create namespace codefresh-demo
+
+# Create Image Pull Secret
+
+  CreateImagePullSecret:
+    image: codefresh/cli
+    stage: "Prepare Kubernetes Cluster"
+    commands:
+      - codefresh generate image-pull-secret --cluster '${{KUBERNETES_CLUSTER_NAME}}' --registry cfcr
+
+# Replace CF_REPO_OWNER in specs files and Deploy Pipelines
+
+  CreateCodefreshPipelines:
+    image: codefresh/cli
+    stage: "Deploy Codefresh Pipelines"
+    working_directory: ./example-voting-app/.codefresh/specs
+    commands:
+      - sed -i 's/CF_REPO_OWNER/${{CF_REPO_OWNER}}/g' *
+      - sed -i 's/KUBERNETES_CLUSTER_NAME/${{KUBERNETES_CLUSTER_NAME}}/g' *
+      - codefresh create -f .

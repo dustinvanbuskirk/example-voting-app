@@ -4,20 +4,5 @@ steps:
     title: Deleting Pull Request Environment
     image: codefresh/cfstep-helm:2.10.0
     commands:
-      - kubectl config use-context sales-demo@FirstKubernetes
+      - kubectl config use-context ${{KUBE_CONTEXT}}
       - helm delete ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}} --purge
-  NotifySlackChannelPRDelete:
-    title: Sending Slack Notification for Pull Request Environment Deletion
-    image: cloudposse/slack-notifier
-    environment:
-      - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
-      - SLACK_USER_NAME=Codefresh
-      - "SLACK_ICON_EMOJI=:recycle:"
-      - "SLACK_TITLE=Deleted Pull Request Environment Release ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}"
-      - SLACK_TITLE_LINK=https://g.codefresh.io/helm/releases/sales-demo@FirstKubernetes/kube-system/${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}/services
-      - SLACK_FOOTER_ICON=https://pbs.twimg.com/profile_images/859843681553178624/AHcBc6EG_400x400.jpg
-      - SLACK_THUMB_URL=https://pbs.twimg.com/profile_images/699752011428810753/ayRqrKW1_400x400.png
-      - SLACK_FOOTER=Deleted Helm Deploy of example-voting-app
-      - SLACK_AUTHOR_NAME=${{CF_BUILD_ID}}
-      - SLACK_AUTHOR_LINK=${{CF_BUILD_URL}}
-      - SLACK_AUTHOR_ICON=https://github.com/${{CF_BUILD_INITIATOR}}.png

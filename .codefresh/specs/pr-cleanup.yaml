@@ -1,0 +1,30 @@
+version: '1.0'
+kind: pipeline
+metadata:
+  name: CF_REPO_OWNER/example-voting-app/pr-cleanup
+  isPublic: false
+  labels:
+    tags:
+      - demo
+  deprecate:
+    repoPipeline: true
+spec:
+  triggers:
+    - type: git
+      repo: CF_REPO_OWNER/example-voting-app
+      events:
+        - pullrequest.closed
+      pullRequestAllowForkEvents: false
+      commentRegex: /.*/gi
+      branchRegex: /.*/gi
+      provider: github
+  contexts: []
+  variables:
+    - key: KUBE_CONTEXT
+      value: 'KUBERNETES_CLUSTER_NAME'
+  specTemplate:
+    location: git
+    repo: CF_REPO_OWNER/example-voting-app
+    path: .codefresh/codefresh-pr-cleanup.yml
+  steps: {}
+  stages: []

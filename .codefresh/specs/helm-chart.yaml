@@ -1,0 +1,28 @@
+version: '1.0'
+kind: pipeline
+metadata:
+  name: CF_REPO_OWNER/example-voting-app/helm-chart
+  isPublic: false
+  labels:
+    tags:
+      - demo
+  deprecate:
+    repoPipeline: true
+spec:
+  triggers:
+    - type: git
+      repo: CF_REPO_OWNER/example-voting-app
+      events:
+        - push.heads
+      pullRequestAllowForkEvents: false
+      commentRegex: /.*/gi
+      branchRegex: /^(?!.*master).*$/gi
+      modifiedFilesGlob: example-voting-app/example-voting-app/**
+      provider: github
+  contexts: []
+  specTemplate:
+    location: git
+    repo: CF_REPO_OWNER/example-voting-app
+    path: .codefresh/codefresh-helm-chart.yml
+  steps: {}
+  stages: []

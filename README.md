@@ -1,5 +1,21 @@
 !!!REWRITE UNDERWAY PLEASE DO NOT FORK OR USE IN CURRENT STATE!!!
 
+PreReqs:
+
+* [Codefresh Account](https://g.codefresh.io/signup)
+* [Kubernetes cluster](https://kubernetes.io/)  (External LB*)
+
+External LB Requirements:
+
+6-10 External IPs.
+
+2 External IPs Required per running example-voting-app release.
+
+Storage Integration:
+
+CF_STORAGE_INTEGRATION
+
+
 Setting up Example Voting App in Codefresh
 =========
 [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=codefresh-io&repoName=example-voting-app&branch=master&pipelineName=example-voting-app-matrix&accountName=perfect_pipeline&type=cf-1)]( https://g.codefresh.io/repositories/codefresh-io/example-voting-app/builds?filter=trigger:build;branch:master;service:5a84d1002b8eaa0001568329~example-voting-app-matrix)

@@ -1,0 +1,28 @@
+version: '1.0'
+kind: pipeline
+metadata:
+  name: CF_REPO_OWNER/example-voting-app/tests
+  isPublic: false
+  labels:
+    tags:
+      - demo
+  deprecate:
+    repoPipeline: true
+spec:
+  triggers:
+    - type: git
+      repo: CF_REPO_OWNER/example-voting-app
+      events:
+        - push.heads
+      pullRequestAllowForkEvents: false
+      commentRegex: /.*/gi
+      branchRegex: /^(?!.*master).*$/gi
+      modifiedFilesGlob: tests/**
+      provider: github
+  contexts: []
+  specTemplate:
+    location: git
+    repo: CF_REPO_OWNER/example-voting-app
+    path: tests/codefresh.yml
+  steps: {}
+  stages: []

@@ -102,7 +102,7 @@ steps:
       - CHART_REF=example-voting-app
       - CHART_REPO_URL=cm://h.cfcr.io/${{CF_ACCOUNT}}/default
       - CHART_VERSION=${{CF_RELEASE_TAG}}
-      - RELEASE_NAME=example-voting-app
+      - RELEASE_NAME=staging-example-voting-app
       - KUBE_CONTEXT=${{KUBE_CONTEXT}}
       - NAMESPACE=${{KUBE_NAMESPACE}}
       - DEBUG_CHART=true

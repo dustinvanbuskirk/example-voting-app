@@ -17,7 +17,7 @@ spec:
         - pullrequest.reopened
         - pullrequest.synchronize
         - release
-      pullRequestAllowForkEvents: false
+      pullRequestAllowForkEvents: true
       commentRegex: /.*/gi
       branchRegex: /.*/gi
       branchRegexInput: regex

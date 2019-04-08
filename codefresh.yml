@@ -37,7 +37,7 @@ steps:
   CreateCodefreshPipelines:
     image: codefresh/cli
     stage: "Deploy Codefresh Pipelines"
-    working_directory: ./example-voting-app/.codefresh/specs
+    working_directory: ./.codefresh/specs
     commands:
       - sed -i 's/CF_REPO_OWNER/${{CF_REPO_OWNER}}/g' ./*
       - sed -i 's/KUBERNETES_CLUSTER_NAME/${{KUBERNETES_CLUSTER_NAME}}/g' ./*

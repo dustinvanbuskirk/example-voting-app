@@ -46,7 +46,7 @@ steps:
     environment:
       - CHART_REF=example-voting-app
       - RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}'
-      - KUBE_CONTEXT='${{KUBE_CONTEXT}}''
+      - KUBE_CONTEXT='${{KUBE_CONTEXT}}'
       - NAMESPACE=${{KUBE_NAMESPACE}}
       - DEBUG_CHART=true
       - CMD_PS=-f helm_vars/example-voting-app/pull-requests/worker/secrets.yaml
@@ -103,7 +103,7 @@ steps:
       - CHART_REPO_URL=cm://h.cfcr.io/${{CF_ACCOUNT}}/default
       - CHART_VERSION=${{CF_RELEASE_TAG}}
       - RELEASE_NAME=example-voting-app
-      - KUBE_CONTEXT='${{KUBE_CONTEXT}}''
+      - KUBE_CONTEXT='${{KUBE_CONTEXT}}'
       - NAMESPACE=${{KUBE_NAMESPACE}}
       - DEBUG_CHART=true
       - CMD_PS=-f /codefresh/volume/example-voting-app/helm_vars/example-voting-app/staging/worker/secrets.yaml
@@ -154,7 +154,7 @@ steps:
       - CHART_REPO_URL=cm://h.cfcr.io/${{CF_ACCOUNT}}/default
       - CHART_VERSION=${{CF_RELEASE_TAG}}
       - RELEASE_NAME=production-example-voting-app
-      - KUBE_CONTEXT='${{KUBE_CONTEXT}}''
+      - KUBE_CONTEXT='${{KUBE_CONTEXT}}'
       - NAMESPACE=${{KUBE_NAMESPACE}}
       - DEBUG_CHART=true
       # NEED PGP Key in metadata of CD spec

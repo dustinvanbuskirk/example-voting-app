@@ -41,5 +41,5 @@ steps:
     commands:
       - sed -i \'s/CF_REPO_OWNER/${{CF_REPO_OWNER}}/g\' *
       - sed -i \'s/KUBERNETES_CLUSTER_NAME/${{KUBERNETES_CLUSTER_NAME}}/g\' *
-      - sed -i '\s/KUBERNETES_NAMESPACE/${{KUBERNETES_NAMESPACE}}/g\' *
+      - sed -i \'s/KUBERNETES_NAMESPACE/${{KUBERNETES_NAMESPACE}}/g\' *
       - codefresh create -f .

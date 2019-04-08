@@ -21,7 +21,7 @@ steps:
     image:  codefresh/cfstep-helm
     stage: "Prepare Kubernetes Cluster"
     commands:
-      - kubectl config use-context ${{KUBERNETES_CLUSTER_NAME}}
+      - kubectl config use-context '${{KUBERNETES_CLUSTER_NAME}}'
       - kubectl create namespace ${{KUBERNETES_NAMESPACE}}
 
 # Create Image Pull Secret
@@ -30,7 +30,7 @@ steps:
     image: codefresh/cli
     stage: "Prepare Kubernetes Cluster"
     commands:
-      - codefresh generate image-pull-secret --cluster '${{KUBERNETES_CLUSTER_NAME}}' --registry cfcr
+      - codefresh generate image-pull-secret --cluster '${{KUBERNETES_CLUSTER_NAME}}' --namespace ${{KUBERNETES_NAMESPACE}} --registry cfcr
 
 # Replace CF_REPO_OWNER in specs files and Deploy Pipelines
 

@@ -9,11 +9,11 @@ steps:
 
 # Set Kubernetes Name Here
 
-  SetKubernetesCluster:
+  SetKubernetesClusterVars:
     image: alpine
     stage: "Prepare Kubernetes Cluster"
     commands:
-      - cf_export KUBERNETES_CLUSTER_NAME=${{KUBERNETES_CLUSTER_NAME}}
+      - cf_export KUBERNETES_CLUSTER_NAME=${{KUBERNETES_CLUSTER_NAME}} KUBERNETES_NAMESPACE=${{KUBERNETES_NAMESPACE}}
 
 # Create 'codefresh-demo' Kubernetes Namespace
 
@@ -41,4 +41,5 @@ steps:
     commands:
       - sed -i 's/CF_REPO_OWNER/${{CF_REPO_OWNER}}/g' *
       - sed -i 's/KUBERNETES_CLUSTER_NAME/${{KUBERNETES_CLUSTER_NAME}}/g' *
+      - sed -i 's/KUBERNETES_NAMESPACE/${{KUBERNETES_NAMESPACE}}/g' *
       - codefresh create -f .

@@ -47,18 +47,18 @@ steps:
       - CHART_REF=example-voting-app
       - RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}'
       - KUBE_CONTEXT='${{KUBE_CONTEXT}}''
-      - NAMESPACE=codefresh-demo
+      - NAMESPACE=${{KUBE_NAMESPACE}}
       - DEBUG_CHART=true
       - CMD_PS=-f helm_vars/example-voting-app/pull-requests/worker/secrets.yaml
       - value_result_image_repository=r.cfcr.io/${{CF_ACCOUNT}}/example-voting-app/result
       - value_result_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-      - value_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-codefresh-demo
+      - value_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-${{KUBE_NAMESPACE}}
       - value_vote_image_repository=r.cfcr.io/${{CF_ACCOUNT}}/example-voting-app/vote
       - value_vote_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-      - value_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-codefresh-demo
+      - value_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-${{KUBE_NAMESPACE}}
       - value_worker_image_repository=r.cfcr.io/${{CF_ACCOUNT}}/example-voting-app/worker
       - value_worker_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-      - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-codefresh-demo
+      - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-${{KUBE_NAMESPACE}}
     commands:
       - echo -e "${{GPG_SEC}}" > mygpgkey_sec.asc
       - gpg --import --allow-secret-key-import mygpgkey_sec.asc
@@ -73,7 +73,7 @@ steps:
     stage: "pull request"
     image: 'codefresh/cli:latest'
     commands:
-      - codefresh run ${{CF_ACCOUNT}}/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT='${{KUBE_CONTEXT}}' -v NAMESPACE=codefresh-demo -v SERVICES='vote result' -v RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}' -v TEST_IMAGE='example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+      - codefresh run ${{CF_ACCOUNT}}/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT='${{KUBE_CONTEXT}}' -v NAMESPACE=${{KUBE_NAMESPACE}} -v SERVICES='vote result' -v RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}' -v TEST_IMAGE='example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
     when:
       condition:
         any:
@@ -104,18 +104,18 @@ steps:
       - CHART_VERSION=${{CF_RELEASE_TAG}}
       - RELEASE_NAME=example-voting-app
       - KUBE_CONTEXT='${{KUBE_CONTEXT}}''
-      - NAMESPACE=codefresh-demo
+      - NAMESPACE=${{KUBE_NAMESPACE}}
       - DEBUG_CHART=true
       - CMD_PS=-f /codefresh/volume/example-voting-app/helm_vars/example-voting-app/staging/worker/secrets.yaml
       - value_result_image_repository=r.cfcr.io/${{CF_ACCOUNT}}/example-voting-app/result
       - value_result_image_tag=master-${{CF_SHORT_REVISION}}
-      - value_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-codefresh-demo
+      - value_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-${{KUBE_NAMESPACE}}
       - value_vote_image_repository=r.cfcr.io/${{CF_ACCOUNT}}/example-voting-app/vote
       - value_vote_image_tag=master-${{CF_SHORT_REVISION}}
-      - value_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-codefresh-demo
+      - value_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-${{KUBE_NAMESPACE}}
       - value_worker_image_repository=r.cfcr.io/${{CF_ACCOUNT}}/example-voting-app/worker
       - value_worker_image_tag=master-${{CF_SHORT_REVISION}}
-      - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-codefresh-demo
+      - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-${{KUBE_NAMESPACE}}
     commands:
       - echo -e "${{GPG_SEC}}" > mygpgkey_sec.asc
       - gpg --import --allow-secret-key-import mygpgkey_sec.asc
@@ -130,7 +130,7 @@ steps:
     title: Running DVTS on Staging Release
     image: 'codefresh/cli:latest'
     commands:
-      - codefresh run ${{CF_ACCOUNT}}/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT='${{KUBE_CONTEXT}}' -v NAMESPACE=codefresh-demo -v SERVICES='vote result' -v RELEASE_NAME='example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'
+      - codefresh run ${{CF_ACCOUNT}}/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT='${{KUBE_CONTEXT}}' -v NAMESPACE=${{KUBE_NAMESPACE}} -v SERVICES='vote result' -v RELEASE_NAME='example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'
     when:
       condition:
         any:
@@ -155,19 +155,19 @@ steps:
       - CHART_VERSION=${{CF_RELEASE_TAG}}
       - RELEASE_NAME=production-example-voting-app
       - KUBE_CONTEXT='${{KUBE_CONTEXT}}''
-      - NAMESPACE=codefresh-demo
+      - NAMESPACE=${{KUBE_NAMESPACE}}
       - DEBUG_CHART=true
       # NEED PGP Key in metadata of CD spec
       - CMD_PS=-f /codefresh/volume/example-voting-app/helm_vars/example-voting-app/production/worker/secrets.yaml
       - value_result_image_repository=r.cfcr.io/${{CF_ACCOUNT}}/example-voting-app/result
       - value_result_image_tag=master-${{CF_SHORT_REVISION}}
-      - value_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-codefresh-demo
+      - value_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-${{KUBE_NAMESPACE}}
       - value_vote_image_repository=r.cfcr.io/${{CF_ACCOUNT}}/example-voting-app/vote
       - value_vote_image_tag=master-${{CF_SHORT_REVISION}}
-      - value_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-codefresh-demo
+      - value_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-${{KUBE_NAMESPACE}}
       - value_worker_image_repository=r.cfcr.io/${{CF_ACCOUNT}}/example-voting-app/worker
       - value_worker_image_tag=master-${{CF_SHORT_REVISION}}
-      - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-codefresh-demo
+      - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-${{KUBE_NAMESPACE}}
     commands:
       - echo -e "${{GPG_SEC}}" > mygpgkey_sec.asc
       - gpg --import --allow-secret-key-import mygpgkey_sec.asc
@@ -182,4 +182,4 @@ steps:
     title: Running DVTS on Production Release
     image: 'codefresh/cli:latest'
     commands:
-      - codefresh run ${{CF_ACCOUNT}}/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT='${{KUBE_CONTEXT}}' -v NAMESPACE=codefresh-demo -v SERVICES='vote result' -v RELEASE_NAME='production-example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'
+      - codefresh run ${{CF_ACCOUNT}}/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT='${{KUBE_CONTEXT}}' -v NAMESPACE=${{KUBE_NAMESPACE}} -v SERVICES='vote result' -v RELEASE_NAME='production-example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'

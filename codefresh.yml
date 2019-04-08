@@ -22,7 +22,7 @@ steps:
     stage: "Prepare Kubernetes Cluster"
     commands:
       - kubectl config use-context ${{KUBERNETES_CLUSTER_NAME}}
-      - kubectl create namespace codefresh-demo
+      - kubectl create namespace ${{KUBERNETES_NAMESPACE}}
 
 # Create Image Pull Secret
 

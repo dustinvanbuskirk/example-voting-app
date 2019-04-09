@@ -55,6 +55,8 @@ Make sure you have complete pre-reqs
 
 Now you can play with the release or do something similar with your own application.
 
+![Development Workflow](eva-dev-workflow.png)
+
 To generate staging release simply add a new GitHub Release to your forked repository.
 
 To generate production release approve that pipeline to continue on.

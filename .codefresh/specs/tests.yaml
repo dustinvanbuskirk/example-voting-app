@@ -17,6 +17,7 @@ spec:
       pullRequestAllowForkEvents: false
       commentRegex: /.*/gi
       branchRegex: /^(?!.*master).*$/gi
+      branchRegexInput: regex
       modifiedFilesGlob: tests/**
       provider: github
   contexts: []
@@ -24,5 +25,6 @@ spec:
     location: git
     repo: CF_REPO_OWNER/example-voting-app
     path: tests/codefresh.yml
+    context: github
   steps: {}
   stages: []

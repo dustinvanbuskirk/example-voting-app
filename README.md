@@ -3,10 +3,8 @@
 PreReqs:
 
 * [Codefresh Account](https://g.codefresh.io/signup)
-* [Kubernetes cluster](https://kubernetes.io/)  (External LB*)
+* [Kubernetes cluster](https://kubernetes.io/) (External LB*) (Options**)
 * [GitHub Context](https://codefresh.io/docs/docs/integrations/git-providers/#github) (named github)
-
-External LB Requirements:
 
 Only one example-voting-app demo per Kubernetes cluster.
 If you absolutely must share update the release names with your personal
@@ -14,18 +12,16 @@ If you absolutely must share update the release names with your personal
 This pipeline will create Helm Releases in a few ways.
 Every PR gets a new release just create a branch and a PR back to your forker repository.
 Staging and Production both get a release and are long-lived environments.
-They are trigger by creating a new GitHub Release.
+They are triggered by creating a new GitHub Release.
 After staging deploys successfully you will be prompted to Approve the release to Production.
+
+*External LB Requirements:
 
 6-10 External Ephemeral IPs required for normal usage from Cloud provider
 
 2 External IPs Required per running example-voting-app release.
 
-If wanted Allure is supported and step is there just setup Storage Integration and uncomment the step in cd.yml
-
-[Storage Integration](https://codefresh.io/docs/docs/testing/test-reports)
-
-Some popular Kubernetes options
+**Some popular Kubernetes options
 
 * [Amazon KOPs](https://github.com/kubernetes/kops) [Tutorial](https://codefresh.io/kubernetes-tutorial/tutorial-deploying-kubernetes-to-aws-using-kops/)
 * [Amazon EKS (Preview)](https://aws.amazon.com/eks/)
@@ -35,6 +31,9 @@ Some popular Kubernetes options
 * [IBM Cloud Container Service](https://www.ibm.com/cloud/container-service)
 * [Stackpoint Cloud](https://stackpoint.io/)
 
+If wanted, Allure is supported and step is there just setup Storage Integration and uncomment the step in cd.yml
+
+[Storage Integration](https://codefresh.io/docs/docs/testing/test-reports)
 
 Now onto the How-to!
 ----
@@ -43,15 +42,13 @@ Fork this [Github Repository](https://github.com/codefresh-contrib/example-votin
 ----
 Either [Fork](https://help.github.com/articles/fork-a-repo/) or copy this repositories content to your Github Account or a GIT repository in another Version Control System.
 
-[Attach Kubernetes Cluster to Codefresh](https://codefresh.io/docs/docs/deploy-to-kubernetes/adding-non-gke-kubernetes-cluster/)
-----
 
 Make sure you have complete pre-reqs
 ----
 
-1. Add your forked GitHub Repository to Codefresh.
-1. Make any modifications to YAML files you need to make like the release names
-1. Build `example-voting-app` pipeline selecting `Advanced Options` and specifying name of your Kubernetes cluster `KUBERNETES_CLUSTER_NAME` as shown in Codefresh and the Kubernetes namespace `KUBERNETES_NAMESPACE` to deploy to example-voting-app to.
+1. Add your forked GitHub Repository to Codefresh through UI
+1. Make any modifications to YAML files you need to make like the release names (explained above)
+1. Build `example-voting-app` pipeline selecting `Advanced Options` and specifying name of your Kubernetes cluster `KUBERNETES_CLUSTER_NAME` as shown in Codefresh and the Kubernetes namespace `KUBERNETES_NAMESPACE` to deploy `example-voting-app` releases to (this namespace is created automatically by pipeline and must not exist before hand).  This is a one-time operation and not idempotent at this time.
 
 Now you can play with the release or do something similar with your own application.
 

@@ -8,7 +8,16 @@ PreReqs:
 
 Only one example-voting-app demo per Kubernetes cluster.
 If you absolutely must share update the release names with your personal
-  - Find and replace `staging-example-voting-app` and `production-example-voting-app` with unique prepended value like `dustinvb-staging-example-voting-app` and `dustinvb-production-example-voting-app` in `.codefresh/codefresh-cd.yml`
+  - Find and prepend your user/org info (shortname) to the following values in `.codefresh/codefresh-cd.yml`:
+    - `${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}`
+    - `staging-example-voting-app`
+    - `production-example-voting-app` 
+    
+    with unique prepended value like...
+    - `dustinvb-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}`
+    - `dustinvb-staging-example-voting-app`
+    - `dustinvb-production-example-voting-app`
+
 This pipeline will create Helm Releases in a few ways.
 Every PR gets a new release just create a branch and a PR back to your forker repository.
 Staging and Production both get a release and are long-lived environments.
@@ -48,7 +57,7 @@ Make sure you have complete pre-reqs
 
 1. Add your forked GitHub Repository to Codefresh through UI
 1. Make any modifications to YAML files you need to make like the release names (explained above)
-1. Remove the GIT trigger for `example-voting-app` pipeline.
+1. Modify the GIT trigger for `example-voting-app` pipeline adding this Branch Regex `/one-time-build/gi`.
 1. Build `example-voting-app` pipeline selecting `Advanced Options` and specifying name of your Kubernetes cluster `KUBERNETES_CLUSTER_NAME` as shown in Codefresh and the Kubernetes namespace `KUBERNETES_NAMESPACE` to deploy `example-voting-app` releases to (this namespace is created automatically by pipeline and must not exist before hand).  This is a one-time operation and not idempotent at this time.
 
 Now you can play with the release or do something similar with your own application.

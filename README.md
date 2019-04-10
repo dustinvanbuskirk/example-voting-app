@@ -1,4 +1,5 @@
-!!!REWRITE UNDERWAY PLEASE DO NOT FORK OR USE IN CURRENT STATE!!!
+Example Voting App (GitOps + Helm Demo Env)
+----
 
 PreReqs:
 

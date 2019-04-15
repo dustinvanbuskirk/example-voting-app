@@ -19,7 +19,7 @@ steps:
       version: '2'
       services:
         selenium_hub:
-          image: selenium/hub:3.13.0
+          image: selenium/hub:latest
           ports:
             - 4444
           environment:

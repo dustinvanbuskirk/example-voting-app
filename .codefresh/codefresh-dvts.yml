@@ -19,14 +19,14 @@ steps:
       version: '2'
       services:
         selenium_hub:
-          image: selenium/hub:3.13.0
+          image: selenium/hub:latest
           ports:
             - 4444
           environment:
             - SE_OPTS=-debug
             - GRID_MAX_SESSION=5
         chrome_node:
-          image: selenium/node-chrome:3.13.0
+          image: selenium/node-chrome:latest
           ports:
             - 5900
             - 5555
@@ -39,7 +39,7 @@ steps:
             - NODE_MAX_SESSION=5
             - NODE_MAX_INSTANCES=5
         firefox_node:
-          image: selenium/node-firefox:3.13.0
+          image: selenium/node-firefox:latest
           ports:
             - 5900
             - 5555

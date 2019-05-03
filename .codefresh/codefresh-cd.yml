@@ -45,7 +45,7 @@ steps:
     working_directory: ./
     environment:
       - CHART_REF=example-voting-app
-      - RELEASE_NAME='vidyas-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}'
+      - RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}'
       - KUBE_CONTEXT=${{KUBE_CONTEXT}}
       - NAMESPACE=${{KUBE_NAMESPACE}}
       - DEBUG_CHART=true
@@ -102,7 +102,7 @@ steps:
       - CHART_REF=example-voting-app
       - CHART_REPO_URL=cm://h.cfcr.io/${{CF_ACCOUNT}}/default
       - CHART_VERSION=${{CF_RELEASE_TAG}}
-      - RELEASE_NAME=vidyas-staging-example-voting-app
+      - RELEASE_NAME=staging-example-voting-app
       - KUBE_CONTEXT=${{KUBE_CONTEXT}}
       - NAMESPACE=${{KUBE_NAMESPACE}}
       - DEBUG_CHART=true
@@ -153,7 +153,7 @@ steps:
       - CHART_REF=example-voting-app
       - CHART_REPO_URL=cm://h.cfcr.io/${{CF_ACCOUNT}}/default
       - CHART_VERSION=${{CF_RELEASE_TAG}}
-      - RELEASE_NAME=vidyas-production-example-voting-app
+      - RELEASE_NAME=production-example-voting-app
       - KUBE_CONTEXT=${{KUBE_CONTEXT}}
       - NAMESPACE=${{KUBE_NAMESPACE}}
       - DEBUG_CHART=true

@@ -56,10 +56,14 @@ Either [Fork](https://help.github.com/articles/fork-a-repo/) or copy this reposi
 Make sure you have complete pre-reqs
 ----
 
-1. Add your forked GitHub Repository to Codefresh through UI
-1. Make any modifications to YAML files you need to make like the release names (explained above)
-1. Modify the GIT trigger for `example-voting-app` pipeline adding this Branch Regex `/one-time-build/gi`.
-1. Build `example-voting-app` pipeline selecting `Advanced Options` and specifying name of your Kubernetes cluster `KUBERNETES_CLUSTER_NAME` as shown in Codefresh and the Kubernetes namespace `KUBERNETES_NAMESPACE` to deploy `example-voting-app` releases to (this namespace is created automatically by pipeline and must not exist before hand).  This is a one-time operation and not idempotent at this time.
+1. Create `example-voting-app` project.
+1. Create `example-voting-app` pipeline.
+1. Unselect the option ADD GIT COMMIT TRIGGER.
+1. Click CREATE.
+1. Add the contents of codefresh.yml to Inline Editor.
+1. Save pipeline (DO NOT RUN)
+1. Make any modifications to Codefresh YAML files you need to make like the release names (explained above)
+1. Build `example-voting-app` pipeline selecting `Advanced Options` and specifying name of your GitHub Org `GITHUB_ORG`, Kubernetes cluster `KUBERNETES_CLUSTER_NAME` as shown in Codefresh and the Kubernetes namespace `KUBERNETES_NAMESPACE` to deploy `example-voting-app` releases to (this namespace is created automatically by pipeline and must not exist before hand).  This is a one-time operation and not idempotent at this time.
 
 Now you can play with the release or do something similar with your own application.
 

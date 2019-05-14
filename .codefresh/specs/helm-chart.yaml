@@ -6,8 +6,7 @@ metadata:
   labels:
     tags:
       - demo
-  deprecate:
-    repoPipeline: true
+  project: CF_ACCOUNT/example-voting-app
 spec:
   triggers:
     - type: git

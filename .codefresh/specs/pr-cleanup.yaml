@@ -1,7 +1,7 @@
 version: '1.0'
 kind: pipeline
 metadata:
-  name: CF_REPO_OWNER/example-voting-app/pr-cleanup
+  name: CF_ACCOUNT/example-voting-app/pr-cleanup
   isPublic: false
   labels:
     tags:

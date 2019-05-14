@@ -1,7 +1,7 @@
 version: '1.0'
 kind: pipeline
 metadata:
-  name: CF_REPO_OWNER/example-voting-app/worker
+  name: CF_ACCOUNT/example-voting-app/worker
   isPublic: false
   labels:
     tags:

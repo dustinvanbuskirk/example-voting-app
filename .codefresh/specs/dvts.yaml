@@ -18,5 +18,6 @@ spec:
     repo: CF_REPO_OWNER/example-voting-app
     path: .codefresh/codefresh-dvts.yml
     context: github
+    revision: master
   steps: {}
   stages: []

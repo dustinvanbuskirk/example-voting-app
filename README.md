@@ -1,4 +1,4 @@
-Example Voting App Vidyas test1 (GitOps + Helm Demo Env)
+Example Voting App Vidyas test1. Adding text for testing (GitOps + Helm Demo Env)
 ----
 
 PreReqs:

@@ -40,7 +40,7 @@ steps:
     commands:
       - codefresh generate image-pull-secret --cluster '${{KUBERNETES_CLUSTER_NAME}}' --namespace ${{KUBERNETES_NAMESPACE}} --registry cfcr
 
-# Replace CF_REPO_OWNER, CF_ACCOUNT, KUBERNETES_CLUSTER_NAME and KUBERNETES_NAMESPACE in specs files and Deploy Pipelines
+# Replace CF_REPO_OWNER, KUBERNETES_CLUSTER_NAME and KUBERNETES_NAMESPACE in specs files and Deploy Pipelines
 
   CreateCodefreshPipelines:
     image: codefresh/cli
@@ -48,7 +48,6 @@ steps:
     working_directory: ./.codefresh/specs
     commands:
       - sed -i 's/CF_REPO_OWNER/${{GITHUB_ORG}}/g' *
-      - sed -i 's/CF_ACCOUNT/${{CF_ACCOUNT}}/g' *
       - sed -i 's/KUBERNETES_CLUSTER_NAME/${{KUBERNETES_CLUSTER_NAME}}/g' *
       - sed -i 's/KUBERNETES_NAMESPACE/${{KUBERNETES_NAMESPACE}}/g' *
       - find . -iname '*.yaml' -exec codefresh create -f {} \;

@@ -1,12 +1,12 @@
 version: '1.0'
 kind: pipeline
 metadata:
-  name: CF_ACCOUNT/example-voting-app/helm-chart
+  name: example-voting-app/helm-chart
   isPublic: false
   labels:
     tags:
       - demo
-  project: CF_ACCOUNT/example-voting-app
+  project: example-voting-app
 spec:
   triggers:
     - type: git

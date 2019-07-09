@@ -195,7 +195,6 @@ steps:
     title: Sending Slack Notification for Pull Request Environment
     image: cloudposse/slack-notifier
     environment:
-      - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
       - SLACK_USER_NAME=Codefresh
       - "SLACK_ICON_EMOJI=:superfresh:"
       - SLACK_TITLE=Pull Request Environment Deployed for ${{CF_BRANCH}}
@@ -278,7 +277,6 @@ steps:
     title: Sending Slack Notification for Staging Upgrade
     image: cloudposse/slack-notifier
     environment:
-      - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
       - SLACK_USER_NAME=Codefresh
       - "SLACK_ICON_EMOJI=:superfresh:"
       - SLACK_TITLE=Staging Upgraded
@@ -356,7 +354,6 @@ steps:
     title: Sending Slack Notification for Production Upgrade
     image: cloudposse/slack-notifier
     environment:
-      - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
       - SLACK_USER_NAME=Codefresh
       - "SLACK_ICON_EMOJI=:superfresh:"
       - SLACK_TITLE=Production Upgraded

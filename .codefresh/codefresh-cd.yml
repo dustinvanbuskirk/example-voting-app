@@ -76,6 +76,7 @@ steps:
         arguments:
           IMAGE: example-voting-app/result
           TAG: ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+          CLAIR_URL: ${{CLAIR_URL}}
         on_success:
           metadata:
             set:
@@ -87,6 +88,7 @@ steps:
         arguments:
           IMAGE: example-voting-app/vote
           TAG: ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+          CLAIR_URL: ${{CLAIR_URL}}
         on_success:
           metadata:
             set:
@@ -98,6 +100,7 @@ steps:
         environment:
           IMAGE: example-voting-app/worker
           TAG: ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+          CLAIR_URL: ${{CLAIR_URL}}
         on_success:
           metadata:
             set:

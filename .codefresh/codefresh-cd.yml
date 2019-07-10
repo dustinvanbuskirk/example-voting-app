@@ -73,9 +73,9 @@ steps:
       ScanResultImage:
         type: paclair
         image: dustinvanbuskirk/paclair:demo
-        environment:
-          - IMAGE=example-voting-app/result
-          - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+        arguments:
+          IMAGE: example-voting-app/result
+          TAG: ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
         on_success:
           metadata:
             set:
@@ -84,9 +84,9 @@ steps:
       ScanVoteImage:
         type: paclair
         image: dustinvanbuskirk/paclair:demo
-        environment:
-          - IMAGE=example-voting-app/vote
-          - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+        arguments:
+          IMAGE: example-voting-app/vote
+          TAG: ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
         on_success:
           metadata:
             set:
@@ -96,8 +96,8 @@ steps:
         type: paclair
         image: dustinvanbuskirk/paclair:demo
         environment:
-          - IMAGE=example-voting-app/worker
-          - TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+          IMAGE: example-voting-app/worker
+          TAG: ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
         on_success:
           metadata:
             set:

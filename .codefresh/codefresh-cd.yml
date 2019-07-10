@@ -71,6 +71,7 @@ steps:
     stage: "security scans"
     steps:
       ScanResultImage:
+        type: paclair
         image: dustinvanbuskirk/paclair:demo
         environment:
           - IMAGE=example-voting-app/result
@@ -81,6 +82,7 @@ steps:
               - ${{BuildResultImage.imageId}}:
                 - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/v2/5bad4b30b35f252387df1ffd/${{CF_BRANCH}}/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-result-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
       ScanVoteImage:
+        type: paclair
         image: dustinvanbuskirk/paclair:demo
         environment:
           - IMAGE=example-voting-app/vote
@@ -91,6 +93,7 @@ steps:
               - ${{BuildVoteImage.imageId}}:
                 - CLAIR_REPORT: "https://g.codefresh.io/api/testReporting/v2/5bad4b30b35f252387df1ffd/${{CF_BRANCH}}/s3/amazon/example-voting-app/${{CF_BUILD_ID}}/clair-scan-example-voting-app-vote-${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}.html"
       ScanWorkerImage:
+        type: paclair
         image: dustinvanbuskirk/paclair:demo
         environment:
           - IMAGE=example-voting-app/worker
@@ -133,6 +136,7 @@ steps:
   DeployPRRelease:
     stage: "pull request"
     title: Create Ephemeral Helm Release for Pull Request
+    type: helm
     image: dustinvanbuskirk/cfstep-helm:demo
     working_directory: ./
     environment:
@@ -163,6 +167,7 @@ steps:
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   RunPRDVTs:
     stage: "pull request"
+    type: codefresh-run
     image: 'codefresh/cli:latest'
     commands:
       - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo@FirstKubernetes -v NAMESPACE=dustinvb-pull-requests -v SERVICES='vote result' -v RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}' -v TEST_IMAGE='example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
@@ -193,6 +198,7 @@ steps:
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   NotifySlackChannelPR:
     title: Sending Slack Notification for Pull Request Environment
+    type: slack-notifier
     image: cloudposse/slack-notifier
     environment:
       - SLACK_USER_NAME=Codefresh
@@ -233,6 +239,7 @@ steps:
   UpgradeStagingRelease:
     stage: staging
     title: Upgrading Staging Release
+    type: helm
     image: dustinvanbuskirk/cfstep-helm:demo
     working_directory: /
     environment:
@@ -265,6 +272,7 @@ steps:
   RunStagingDVTs:
     stage: staging
     title: Running DVTS on Staging Release
+    type: codefresh-run
     image: 'codefresh/cli:latest'
     commands:
       - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo@FirstKubernetes -v NAMESPACE=dustinvb-staging -v SERVICES='vote result' -v RELEASE_NAME='example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'
@@ -275,6 +283,7 @@ steps:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
   NotifySlackChannelStaging:
     title: Sending Slack Notification for Staging Upgrade
+    type: slack-notifier
     image: cloudposse/slack-notifier
     environment:
       - SLACK_USER_NAME=Codefresh
@@ -311,6 +320,7 @@ steps:
   UpgradeProductionRelease:
     stage: production
     title: Upgrading Production Release
+    type: helm
     image: dustinvanbuskirk/cfstep-helm:demo
     working_directory: /
     environment:
@@ -343,6 +353,7 @@ steps:
   RunProductionDVTs:
     stage: production
     title: Running DVTS on Production Release
+    type: codefresh-run
     image: 'codefresh/cli:latest'
     commands:
       - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-prod@FirstKubernetes -v NAMESPACE=dustinvb-production -v SERVICES='vote result' -v RELEASE_NAME='example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'
@@ -352,6 +363,7 @@ steps:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
   NotifySlackChannelProduction:
     title: Sending Slack Notification for Production Upgrade
+    type: slack-notifier
     image: cloudposse/slack-notifier
     environment:
       - SLACK_USER_NAME=Codefresh

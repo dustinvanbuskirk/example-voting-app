@@ -170,14 +170,14 @@ steps:
       TRIGGER_ID: dustinvanbuskirk/example-voting-app_1
       BRANCH: ${{CF_BRANCH}}
       SHA: ${{CF_REVISION}}
+      ENABLE_NOTIFICATIONS: true
       CONTEXT:
         - github
       VARIABLE:
-        - ENABLE_NOTIFICATIONS=true
         - KUBE_CONTEXT=sales-demo@FirstKubernetes
-        - SERVICES='vote result'
-        - RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}'
-        - TEST_IMAGE='example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+        - SERVICES=vote result
+        - RELEASE_NAME=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}
+        - TEST_IMAGE=example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
     when:
       condition:
         any:

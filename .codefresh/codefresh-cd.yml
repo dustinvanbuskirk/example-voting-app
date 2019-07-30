@@ -162,10 +162,22 @@ steps:
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   RunPRDVTs:
+    title: Running Deployment Verification Tests
     stage: "pull request"
-    image: 'codefresh/cli:latest'
-    commands:
-      - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo@FirstKubernetes -v NAMESPACE=dustinvb-pull-requests -v SERVICES='vote result' -v RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}' -v TEST_IMAGE='example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+    type: codefresh-run
+    arguments:
+      PIPELINE_ID: dustinvanbuskirk/example-voting-app/dvts
+      TRIGGER_ID: dustinvanbuskirk/example-voting-app_1
+      BRANCH: ${{CF_BRANCH}}
+      SHA: ${{CF_REVISION}}
+      ENABLE_NOTIFICATIONS: true
+      CONTEXT:
+        - github
+      VARIABLE:
+        - KUBE_CONTEXT=sales-demo@FirstKubernetes
+        - NAMESPACE=dustinvb-pull-requests
+        - RELEASE_NAME=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}
+        - TEST_IMAGE=example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
     when:
       condition:
         any:
@@ -263,11 +275,22 @@ steps:
           stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
   RunStagingDVTs:
-    stage: staging
-    title: Running DVTS on Staging Release
-    image: 'codefresh/cli:latest'
-    commands:
-      - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo@FirstKubernetes -v NAMESPACE=dustinvb-staging -v SERVICES='vote result' -v RELEASE_NAME='example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'
+    title: Running Deployment Verification Tests on Staging
+    stage: "staging"
+    type: codefresh-run
+    arguments:
+      PIPELINE_ID: dustinvanbuskirk/example-voting-app/dvts
+      TRIGGER_ID: dustinvanbuskirk/example-voting-app_1
+      BRANCH: ${{CF_BRANCH}}
+      SHA: ${{CF_REVISION}}
+      ENABLE_NOTIFICATIONS: true
+      CONTEXT:
+        - github
+      VARIABLE:
+        - KUBE_CONTEXT=sales-demo@FirstKubernetes
+        - NAMESPACE=dustinvb-staging
+        - RELEASE_NAME=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}
+        - TEST_IMAGE=example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
     when:
       condition:
         any:
@@ -341,11 +364,22 @@ steps:
         on:
         - approved
   RunProductionDVTs:
-    stage: production
-    title: Running DVTS on Production Release
-    image: 'codefresh/cli:latest'
-    commands:
-      - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-prod@FirstKubernetes -v NAMESPACE=dustinvb-production -v SERVICES='vote result' -v RELEASE_NAME='example-voting-app' -v TEST_IMAGE='example-voting-app/tests:master-${{CF_SHORT_REVISION}}'
+    title: Running Deployment Verification Tests on Production
+    stage: "pull request"
+    type: codefresh-run
+    arguments:
+      PIPELINE_ID: dustinvanbuskirk/example-voting-app/dvts
+      TRIGGER_ID: dustinvanbuskirk/example-voting-app_1
+      BRANCH: ${{CF_BRANCH}}
+      SHA: ${{CF_REVISION}}
+      ENABLE_NOTIFICATIONS: true
+      CONTEXT:
+        - github
+      VARIABLE:
+        - KUBE_CONTEXT=sales-prod@FirstKubernetes
+        - NAMESPACE=dustinvb-production
+        - RELEASE_NAME=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}
+        - TEST_IMAGE=example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
     when:
       condition:
         all:

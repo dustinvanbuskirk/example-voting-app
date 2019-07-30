@@ -171,6 +171,7 @@ steps:
       CONTEXT:
         - github
       VARIABLE:
+        - TRIGGER_ID=dustinvanbuskirk/example-voting-app_1
         - BRANCH=${{CF_BRANCH}}
         - SHA=${{CF_REVISION}}
         - ENABLE_NOTIFICATIONS=true

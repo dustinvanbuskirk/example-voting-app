@@ -162,10 +162,21 @@ steps:
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   RunPRDVTs:
+    title: Running Deployment Verification Tests
     stage: "pull request"
-    image: 'codefresh/cli:latest'
-    commands:
-      - codefresh run dustinvanbuskirk/example-voting-app/dvts -b='${{CF_BRANCH}}' -s='${{CF_REVISION}}' -v KUBE_CONTEXT=sales-demo@FirstKubernetes -v NAMESPACE=dustinvb-pull-requests -v SERVICES='vote result' -v RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}' -v TEST_IMAGE='example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+    type: codefresh-run
+    arguments:
+      PIPELINE_ID: dustinvanbuskirk/example-voting-app/dvts
+      TRIGGER_ID: trigger_id
+      CONTEXT:
+        - github
+      VARIABLE:
+        - BRANCH=${{CF_BRANCH}}
+        - SHA=${{CF_REVISION}}
+        - KUBE_CONTEXT=sales-demo@FirstKubernetes
+        - SERVICES='vote result'
+        - RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}'
+        - TEST_IMAGE='example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
     when:
       condition:
         any:

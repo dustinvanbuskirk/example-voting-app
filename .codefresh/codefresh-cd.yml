@@ -71,6 +71,15 @@ steps:
     stage: "security scans"
     steps:
       ScanResultImage:
+        title: Scanning Result Image
+        type: paclair
+        arguments:
+          CLAIR_URL: '${{CLAIR_URL}}'
+          IMAGE: 'example-voting-app/result'
+          REGISTRY: '${{REGISTRY}}'
+          REGISTRY_PASSWORD: '${{REGISTRY_USERNAME}}'
+          REGISTRY_USERNAME: '${{REGISTRY_PASSWORD}}'
+          TAG: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
         image: dustinvanbuskirk/paclair:demo
         environment:
           - IMAGE=example-voting-app/result

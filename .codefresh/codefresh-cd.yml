@@ -291,7 +291,7 @@ steps:
         - NAMESPACE=dustinvb-staging
         - RELEASE_NAME=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}
         - TEST_IMAGE=example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-        when:
+    when:
       condition:
         any:
           stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"

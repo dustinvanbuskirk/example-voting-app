@@ -176,7 +176,7 @@ steps:
       VARIABLE:
         - KUBE_CONTEXT=sales-demo@FirstKubernetes
         - NAMESPACE=dustinvb-pull-requests
-        - SERVICES="vote result"
+        - SERVICES='vote result'
         - RELEASE_NAME=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}
         - TEST_IMAGE=example-voting-app/tests:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
     when:

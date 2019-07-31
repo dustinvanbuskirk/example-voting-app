@@ -276,7 +276,7 @@ steps:
           prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
   RunStagingDVTs:
     title: Running Deployment Verification Tests on Staging
-    stage: "staging"
+    stage: staging
     type: codefresh-run
     arguments:
       PIPELINE_ID: dustinvanbuskirk/example-voting-app/dvts
@@ -365,7 +365,7 @@ steps:
         - approved
   RunProductionDVTs:
     title: Running Deployment Verification Tests on Production
-    stage: "pull request"
+    stage: production
     type: codefresh-run
     arguments:
       PIPELINE_ID: dustinvanbuskirk/example-voting-app/dvts

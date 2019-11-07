@@ -1,0 +1,24 @@
+repositories:
+# To use Codefresh Helm Repo import the credentials from Shared Config for correct repo
+- name: codefresh-default                          # Codefresh default Chart Museum
+  url: {{ env "CF_CTX_CF_HELM_DEFAULT_URL" }}
+  keyFile: {{ env "CF_API_KEY" }}
+
+helmDefaults:
+  kubeContext: {{ requiredEnv "KUBE_CONTEXT" }}    # dedicated default key for kube-context (--kube-context)
+  verify: true
+  wait: true
+  timeout: 600
+
+releases:
+  - name: dvb-dev-eva                              # name of this release
+    namespace: {{ requiredEnv "KUBE_NAMESPACE" }}  # target namespace
+    chart: {{ requiredEnv "CHART_LOCATION" }}      # the chart being installed to create this release, referenced by relative path to local helmfile
+    wait: true
+
+environments:
+  development:
+    values:                                        # environment specific values
+      - ./helm_vars/example-voting-app/dustinvb-development/values.yaml
+    secrets:                                       # environment specific secrets
+      - ./helm_vars/example_voting_app/dustinvb-development/worker/secrets.yaml

@@ -11,6 +11,4 @@ releases:
 
 environments:
   development:
-    values:                                        # environment specific values
-      - ./helm_vars/example-voting-app/dustinvb-development/values.yaml
     missingFileHandler: Warn

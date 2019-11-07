@@ -10,3 +10,5 @@ worker:
   image:
     repository: r.cfcr.io/dustinvanbuskirk/example-voting-app/worker
     pullSecret: codefresh-generated-r.cfcr.io-cfcr-dustinvb-development
+  postgresql:
+    postgresPassword: postgres

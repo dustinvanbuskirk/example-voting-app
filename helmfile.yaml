@@ -20,5 +20,4 @@ environments:
   development:
     values:                                        # environment specific values
       - ./helm_vars/example-voting-app/dustinvb-development/values.yaml
-    secrets:                                       # environment specific secrets
-      - ./helm_vars/example_voting_app/dustinvb-development/worker/secrets.yaml
+

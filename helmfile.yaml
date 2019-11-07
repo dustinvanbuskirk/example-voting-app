@@ -1,5 +1,4 @@
 helmDefaults:
-  verify: true
   wait: true
   timeout: 600
 

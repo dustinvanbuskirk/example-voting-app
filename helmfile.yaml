@@ -1,15 +1,16 @@
 helmDefaults:
+  verify: true
   wait: true
   timeout: 600
 
 releases:
   - name: dvb-dev-eva                              # name of this release
     namespace: dustinvb-development                # target namespace
-    chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
+    chart: example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
     wait: true
 
 environments:
   development:
     values:                                        # environment specific values
-      - ./helm_vars/example-voting-app/dustinvb-development/values.yaml
+      - helm_vars/example-voting-app/dustinvb-development/values.yaml
 

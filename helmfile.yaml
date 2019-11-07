@@ -1,5 +1,4 @@
 helmDefaults:
-  kubeContext: {{ requiredEnv "KUBE_CONTEXT" }}    # dedicated default key for kube-context (--kube-context)
   verify: true
   wait: true
   timeout: 600

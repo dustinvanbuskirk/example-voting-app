@@ -4,30 +4,18 @@ helmDefaults:
 
 environments:
   development:
-    kubeContext: sales-demo@FirstKubernetes        # target context
-    namespace: dustinvb-development                # target namespace
-    chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
     missingFileHandler: Warn
     values:                                        # environment values file path
       - ./helm_vars/example-voting-app/dustinvb-development/values.yaml
   pull-request:
-    kubeContext: sales-demo@FirstKubernetes        # target context
-    namespace: dustinvb-pull-requests              # target namespace
-    chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
     missingFileHandler: Warn
     values:                                        # environment values file path
       - ./helm_vars/example-voting-app/dustinvb-pull-requests/values.yaml
   staging:
-    kubeContext: sales-demo@FirstKubernetes        # target context
-    namespace: dustinvb-staging                    # target namespace
-    chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
     missingFileHandler: Warn
     values:                                        # environment values file path
       - ./helm_vars/example-voting-app/dustinvb-staging/values.yaml
-  pull-request:
-    kubeContext: sales-prod@FirstKubernetes        # target context
-    namespace: dustinvb-production               # target namespace
-    chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
+  production:
     values:                                        # environment values file path
       - ./helm_vars/example-voting-app/dustinvb-production/values.yaml
     missingFileHandler: Warn
@@ -35,15 +23,27 @@ environments:
 releases:
   {{ if eq .Environment.Name "development" }}
   - name: eva-dev-{{ requiredEnv "CF_COMMIT_AUTHOR" }} # Development Environment for Developer
-  {{ end }}
-  {{ if eq .Environment.Name "staging" }}
-  - name: example-voting-app                      # Staging Release Name
-    atomic: true                                  # Automated Rollback
-  {{ end }}
-  {{ if eq .Environment.Name "production" }}
-  - name: example-voting-app                      # Production Release Name
-    atomic: true                                  # Automated Rollback
+    kubeContext: sales-demo@FirstKubernetes        # target context
+    namespace: dustinvb-development                # target namespace
+    chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
   {{ end }}
   {{ if eq .Environment.Name "pull-request" }}
   - name: eva-pr-{{ requiredEnv "CF_PULL_REQUEST_NUMBER" }} # Pull Request Environment per Pull Request
+    kubeContext: sales-demo@FirstKubernetes        # target context
+    namespace: dustinvb-pull-requests              # target namespace
+    chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
+  {{ end }}
+  {{ if eq .Environment.Name "staging" }}
+  - name: example-voting-app                       # Staging Release Name
+    kubeContext: sales-demo@FirstKubernetes        # target context
+    namespace: dustinvb-staging                    # target namespace
+    chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
+    atomic: true                                   # Automated Rollback
+  {{ end }}
+  {{ if eq .Environment.Name "production" }}
+  - name: example-voting-app                      # Production Release Name
+    kubeContext: sales-prod@FirstKubernetes        # target context
+    namespace: dustinvb-production               # target namespace
+    chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
+    atomic: true                                  # Automated Rollback
   {{ end }}

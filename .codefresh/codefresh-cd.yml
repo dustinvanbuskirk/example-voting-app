@@ -131,7 +131,6 @@ steps:
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   DeployPRRelease:
-  DeployPRRelease:
     stage: "pull request"
     type: dustinvanbuskirk/helmfile
     arguments:

@@ -5,19 +5,11 @@ helmDefaults:
 environments:
   development:
     missingFileHandler: Warn
-    values:                                        # environment values file path
-      - ./helm_vars/example-voting-app/dustinvb-development/values.yaml
   pull-request:
     missingFileHandler: Warn
-    values:                                        # environment values file path
-      - ./helm_vars/example-voting-app/dustinvb-pull-requests/values.yaml
   staging:
     missingFileHandler: Warn
-    values:                                        # environment values file path
-      - ./helm_vars/example-voting-app/dustinvb-staging/values.yaml
   production:
-    values:                                        # environment values file path
-      - ./helm_vars/example-voting-app/dustinvb-production/values.yaml
     missingFileHandler: Warn
 
 releases:
@@ -26,6 +18,19 @@ releases:
     kubeContext: sales-demo@FirstKubernetes        # target context
     namespace: dustinvb-development                # target namespace
     chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
+    result:
+    values:                                        # environment values 
+      - result:
+          image:
+            pullSecret: codefresh-generated-r.cfcr.io-cfcr-dustinvb-development
+        vote:
+          image:
+            pullSecret: codefresh-generated-r.cfcr.io-cfcr-dustinvb-development
+        worker:
+          image:
+            pullSecret: codefresh-generated-r.cfcr.io-cfcr-dustinvb-development
+        postgresql:
+          postgresPassword: cG9zdGdyZXM=
   {{ end }}
   {{ if eq .Environment.Name "pull-request" }}
   - name: eva-pr-{{ requiredEnv "CF_PULL_REQUEST_NUMBER" }} # Pull Request Environment per Pull Request

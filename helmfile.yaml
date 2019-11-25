@@ -18,7 +18,6 @@ releases:
     kubeContext: sales-demo@FirstKubernetes        # target context
     namespace: dustinvb-development                # target namespace
     chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
-    result:
     values:                                        # environment values 
       - result:
           image:

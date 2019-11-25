@@ -1,14 +1,14 @@
 result:
   image:
     repository: r.cfcr.io/dustinvanbuskirk/example-voting-app/result
-    pullSecret: codefresh-generated-r.cfcr.io-cfcr-dustinvb-development
+    pullSecret: codefresh-generated-r.cfcr.io-cfcr-dustinvb-helmfile
 vote:
   image:
     repository: r.cfcr.io/dustinvanbuskirk/example-voting-app/vote
-    pullSecret: codefresh-generated-r.cfcr.io-cfcr-dustinvb-development
+    pullSecret: codefresh-generated-r.cfcr.io-cfcr-dustinvb-helmfile
 worker:
   image:
     repository: r.cfcr.io/dustinvanbuskirk/example-voting-app/worker
-    pullSecret: codefresh-generated-r.cfcr.io-cfcr-dustinvb-development
+    pullSecret: codefresh-generated-r.cfcr.io-cfcr-dustinvb-helmfile
 postgresql:
   postgresPassword: cG9zdGdyZXM=

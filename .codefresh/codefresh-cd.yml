@@ -136,7 +136,7 @@ steps:
     arguments:
       WORKING_DIRECTORY: '/codefresh/volume/${{CF_REPO_NAME}}'
       COMMANDS: apply
-      ENVIRONMENT: development
+      ENVIRONMENT: pull-request
       APPLY_PS: '--set result.image.tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}} --set vote.image.tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}} --set worker.image.tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
     when:
       condition:

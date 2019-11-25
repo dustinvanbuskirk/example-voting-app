@@ -5,11 +5,19 @@ helmDefaults:
 environments:
   development:
     missingFileHandler: Warn
+    values:                                        # environment values file path
+      - ./helm_vars/example-voting-app/dustinvb-development/values.yaml
   pull-request:
     missingFileHandler: Warn
+    values:                                        # environment values file path
+      - ./helm_vars/example-voting-app/dustinvb-pull-requests/values.yaml
   staging:
     missingFileHandler: Warn
+    values:                                        # environment values file path
+      - ./helm_vars/example-voting-app/dustinvb-staging/values.yaml
   production:
+    values:                                        # environment values file path
+      - ./helm_vars/example-voting-app/dustinvb-production/values.yaml
     missingFileHandler: Warn
 
 releases:
@@ -18,6 +26,7 @@ releases:
     kubeContext: sales-demo@FirstKubernetes        # target context
     namespace: dustinvb-development                # target namespace
     chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
+    result:
     values:                                        # environment values 
       - result:
           image:
@@ -36,6 +45,8 @@ releases:
     kubeContext: sales-demo@FirstKubernetes        # target context
     namespace: dustinvb-pull-requests              # target namespace
     chart: ./example-voting-app                    # the chart being installed to create this release, referenced by relative path to local helmfile
+    values:                                        # environment values file path
+      - ./helm_vars/example-voting-app/dustinvb-pull-requests/values.yaml
   {{ end }}
   {{ if eq .Environment.Name "staging" }}
   - name: example-voting-app                       # Staging Release Name

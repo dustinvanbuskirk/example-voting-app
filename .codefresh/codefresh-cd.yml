@@ -131,30 +131,14 @@ steps:
           isPRsynchronized: "'${{CF_PULL_REQUEST_ACTION}}' == 'synchronize'"
           isPRreopen: "'${{CF_PULL_REQUEST_ACTION}}' == 'reopened'"
   DeployPRRelease:
+  DeployPRRelease:
     stage: "pull request"
-    title: Create Ephemeral Helm Release for Pull Request
-    image: dustinvanbuskirk/cfstep-helm:demo
-    working_directory: ./
-    environment:
-      - CHART_REF=example-voting-app
-      - RELEASE_NAME='${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_PULL_REQUEST_NUMBER}}-${{CF_REPO_NAME}}'
-      - KUBE_CONTEXT=sales-demo@FirstKubernetes
-      - NAMESPACE=dustinvb-pull-requests
-      - DEBUG_CHART=true
-      - CMD_PS=-f helm_vars/example-voting-app/dustinvb-pull-requests/worker/secrets.yaml
-      - value_result_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/result
-      - value_result_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-      - value_result_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-pull-requests
-      - value_vote_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/vote
-      - value_vote_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-      - value_vote_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-pull-requests
-      - value_worker_image_repository=r.cfcr.io/dustinvanbuskirk/example-voting-app/worker
-      - value_worker_image_tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-      - value_worker_image_pullSecret=codefresh-generated-r.cfcr.io-cfcr-dustinvb-pull-requests
-    commands:
-      - echo -e "${{GPG_SEC}}" > mygpgkey_sec.asc
-      - gpg --import --allow-secret-key-import mygpgkey_sec.asc
-      - /opt/bin/release_chart
+    type: dustinvanbuskirk/helmfile
+    arguments:
+      WORKING_DIRECTORY: '/codefresh/volume/${{CF_REPO_NAME}}'
+      COMMANDS: apply
+      ENVIRONMENT: development
+      APPLY_PS: '--set result.image.tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}} --set vote.image.tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}} --set worker.image.tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
     when:
       condition:
         any:

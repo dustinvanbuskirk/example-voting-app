@@ -1,29 +1,29 @@
-- name: result
-  description: Result Micro Service
-  type: git
-  repo: salesdemocf/argo-voting-app
-  events:
-    - push.heads
-    - pullrequest.opened
-  pullRequestAllowForkEvents: false
-  commentRegex: /.*/gi
-  branchRegex: /^(?!.*main).*$/gi
-  branchRegexInput: regex
-  modifiedFilesGlob: result/**
-  provider: github
-  disabled: false
-  options:
-    noCache: false
-    noCfCache: false
-    resetVolume: false
-  verified: true
-  context: github
-  contexts: []
-  variables:
-    - key: MICROSERVICE
-      value: result
-  lastExecutionDate: '2021-02-12T22:06:29.163Z'
-  status: verified
-  id: 5fab0060a46a6220639c3fb8
-  endpoint: 'https://g.codefresh.io/api/providers/github/hook/hjO8SRA7ye'
-  secret: 63uWz5CTMPwDFL5S
+name: result
+description: Result Micro Service
+type: git
+repo: salesdemocf/argo-voting-app
+events:
+  - push.heads
+  - pullrequest.opened
+pullRequestAllowForkEvents: false
+commentRegex: /.*/gi
+branchRegex: /^(?!.*main).*$/gi
+branchRegexInput: regex
+modifiedFilesGlob: result/**
+provider: github
+disabled: false
+options:
+  noCache: false
+  noCfCache: false
+  resetVolume: false
+verified: true
+context: github
+contexts: []
+variables:
+  - key: MICROSERVICE
+    value: result
+lastExecutionDate: '2021-02-12T22:06:29.163Z'
+status: verified
+id: 5fab0060a46a6220639c3fb8
+endpoint: 'https://g.codefresh.io/api/providers/github/hook/hjO8SRA7ye'
+secret: 63uWz5CTMPwDFL5S

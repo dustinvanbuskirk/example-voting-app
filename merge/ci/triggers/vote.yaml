@@ -1,0 +1,29 @@
+- name: vote
+  description: Vote Micro Service
+  type: git
+  repo: salesdemocf/argo-voting-app
+  events:
+    - push.heads
+    - pullrequest.opened
+  pullRequestAllowForkEvents: false
+  commentRegex: /.*/gi
+  branchRegex: /^(?!.*main).*$/gi
+  branchRegexInput: regex
+  modifiedFilesGlob: vote/**
+  provider: github
+  disabled: false
+  options:
+    noCache: false
+    noCfCache: false
+    resetVolume: false
+  verified: true
+  context: github
+  contexts: []
+  variables:
+    - key: MICROSERVICE
+      value: vote
+  lastExecutionDate: '2021-02-12T22:06:25.701Z'
+  status: verified
+  id: 5fab00976b84e171bf48e966
+  endpoint: 'https://g.codefresh.io/api/providers/github/hook/hjO8SRA7ye'
+  secret: 63uWz5CTMPwDFL5S

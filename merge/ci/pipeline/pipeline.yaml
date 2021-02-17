@@ -1,0 +1,345 @@
+version: '1.0'
+kind: pipeline
+metadata:
+  name: argo-voting-app/microservices
+  project: argo-voting-app
+  projectId: 5faaff016b84e1e2e648e960
+  revision: 75
+  accountId: 5a3a2a445518610001637c87
+  created_at: '2020-11-10T20:59:14.413Z'
+  updated_at: '2021-02-12T22:08:07.992Z'
+  deprecate: {}
+  labels:
+    tags: []
+  originalYamlString: |-
+    version: 1.0
+    stages:
+      - clone
+      - build
+      - push
+      - update_git
+      - sync_development
+      - sync_staging
+      - approval
+      - sync_production
+    steps:
+      Clone:
+        title: Cloning GIT Repository
+        type: git-clone
+        arguments:
+          repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+          git: github
+          revision: ${{CF_REVISION}}
+        stage: clone
+      BuildDockerImage:
+        title: Building Docker Image
+        type: build
+        working_directory: ${{Clone}}/${{MICROSERVICE}}
+        arguments:
+          image_name: ${{CF_REPO_NAME}}/${{MICROSERVICE}}
+          tag: ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+        stage: build
+        when:
+          condition:
+            all:
+              whenMICROSERVICEisNotSet: 'includes("${{MICROSERVICE}}", "{{MICROSERVICE}}") == false'
+      ExtractPullRequest:
+        title: Extract pull request and add to image
+        type: image-enricher
+        fail_fast: false
+        stage: build
+        arguments:
+          IMAGE: '336151728602.dkr.ecr.us-west-2.amazonaws.com/${{CF_REPO_NAME}}/${{MICROSERVICE}}:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+          BRANCH: ${{CF_BRANCH}}
+          REPO: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+          GIT_PROVIDER_NAME: github
+        when:
+          condition:
+            all:
+              whenPullRequestTargetMainBranch: 'includes("${{CF_PULL_REQUEST_TARGET}}", "main") == true'
+      ExtractJIRAIssue:
+        title: Extract issue and add to image
+        type: jira-issue-extractor
+        fail_fast: false
+        stage: build
+        arguments:
+          IMAGE: '336151728602.dkr.ecr.us-west-2.amazonaws.com/${{CF_REPO_NAME}}/${{MICROSERVICE}}:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+          JIRA_PROJECT_PREFIX: SA
+          MESSAGE: '${{CF_PULL_REQUEST_HEAD_BRANCH}}'
+          JIRA_HOST: codefresh-io.atlassian.net
+          JIRA_EMAIL: '${{JIRA_API_USER}}'
+          JIRA_API_TOKEN: '${{JIRA_API_TOKEN}}'
+        when:
+          condition:
+            all:
+              whenPullRequestTargetMainBranch: 'includes("${{CF_PULL_REQUEST_TARGET}}", "main") == true'
+      PushDockerImage:
+        type: push
+        arguments:
+          candidate: ${{BuildDockerImage}}
+          tag: ${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+          image_name: ${{CF_REPO_NAME}}/${{MICROSERVICE}}
+          registry: ecr
+        stage: push
+        when:
+          condition:
+            all:
+              whenMICROSERVICEisNotSet: 'includes("${{MICROSERVICE}}", "{{MICROSERVICE}}") == false'
+      EditYAMLFile:
+        type: codefreshdemo/yaml-gitops-editor
+        arguments:
+          GIT_CONTEXT: github
+          YAMLFILE: ${{CF_REPO_NAME}}/values.yaml
+          CREATE_PULL_REQUEST: true
+          TARGET_BRANCH: main
+          KEYVALUE_PAIRS:
+            - ${{MICROSERVICE}}.image.tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+        stage: update_git
+        when:
+          condition:
+            all:
+              whenMICROSERVICEisNotSet: 'includes("${{MICROSERVICE}}", "{{MICROSERVICE}}") == false'
+              whenMICROSERVICEisNottests: 'includes("${{MICROSERVICE}}", "tests") == false'
+      ArgoSyncDevelopment:
+        title: Sync Development ArgoCD App
+        type: argocd-sync
+        arguments:
+          context: sales-dev-eks-argocd
+          app_name: development-argo-voting-app
+          additional_flags: '--loglevel debug --timeout 1200 --grpc-web --values ./values.yaml'
+        stage: sync_development
+        when:
+          branch:
+            only:
+              - main
+          condition:
+            all:
+              whenCF_PRERELEASE_FLAGisNotSet: 'includes("${{CF_PRERELEASE_FLAG}}", "{{CF_PRERELEASE_FLAG}}") == true'
+      ArgoSyncStaging:
+        title: Sync Staging ArgoCD App
+        type: argocd-sync
+        arguments:
+          context: sales-dev-eks-argocd
+          app_name: staging-argo-voting-app
+          additional_flags: '--loglevel debug --timeout 1200 --grpc-web --values ./values.yaml'
+        stage: sync_staging
+        when:
+          branch:
+            only:
+              - main
+          condition:
+            all:
+              whenCF_PRERELEASE_FLAGisNotSet: 'includes("${{CF_PRERELEASE_FLAG}}", "{{CF_PRERELEASE_FLAG}}") == false'
+            any:
+              stageRelease: "'${{CF_PRERELEASE_FLAG}}' == 'true'"
+              prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+      ApproveProductionRelease:
+        type: pending-approval
+        title: Approve Release to Production
+        stage: approval
+        when:
+          condition:
+            all:
+              prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+      ArgoSyncProduction:
+        title: Sync Production ArgoCD App
+        type: argocd-sync
+        arguments:
+          context: sales-dev-eks-argocd
+          app_name: production-argo-voting-app
+          additional_flags: '--loglevel debug --timeout 1200 --grpc-web --values ./values.yaml'
+        stage: sync_prod
+        when:
+          branch:
+            only:
+              - main
+          condition:
+            all:
+              whenCF_PRERELEASE_FLAGisNotSet: 'includes("${{CF_PRERELEASE_FLAG}}", "{{CF_PRERELEASE_FLAG}}") == false'
+              prodRelease: "'${{CF_PRERELEASE_FLAG}}' == 'false'"
+  id: 5faaff226b84e1ee0548e961
+spec:
+  triggers: []
+  variables:
+    - key: JIRA_API_TOKEN
+      value: '*****'
+      encrypted: true
+    - key: JIRA_API_USER
+      value: dustinvb@codefresh.io
+      encrypted: false
+  contexts: []
+  stages:
+    - clone
+    - build
+    - push
+    - update_git
+    - sync_development
+    - sync_staging
+    - approval
+    - sync_production
+  terminationPolicy: []
+  externalResources: []
+  debug:
+    steps:
+      Clone:
+        phases:
+          before: true
+          override: false
+          after: false
+      BuildDockerImage:
+        phases:
+          before: true
+          override: false
+          after: false
+      PushDockerImage:
+        phases:
+          before: true
+          override: false
+          after: false
+  runtimeEnvironment:
+    name: system/codefresh-poc
+  steps:
+    Clone:
+      title: Cloning GIT Repository
+      type: git-clone
+      arguments:
+        repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+        git: github
+        revision: '${{CF_REVISION}}'
+      stage: clone
+    BuildDockerImage:
+      title: Building Docker Image
+      type: build
+      working_directory: '${{Clone}}/${{MICROSERVICE}}'
+      arguments:
+        image_name: '${{CF_REPO_NAME}}/${{MICROSERVICE}}'
+        tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+      stage: build
+      when:
+        condition:
+          all:
+            whenMICROSERVICEisNotSet: 'includes("${{MICROSERVICE}}", "{{MICROSERVICE}}") == false'
+    ExtractPullRequest:
+      title: Extract pull request and add to image
+      type: image-enricher
+      fail_fast: false
+      stage: build
+      arguments:
+        IMAGE: >-
+          336151728602.dkr.ecr.us-west-2.amazonaws.com/${{CF_REPO_NAME}}/${{MICROSERVICE}}:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+        BRANCH: '${{CF_BRANCH}}'
+        REPO: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+        GIT_PROVIDER_NAME: github
+      when:
+        condition:
+          all:
+            whenPullRequestTargetMainBranch: 'includes("${{CF_PULL_REQUEST_TARGET}}", "main") == true'
+    ExtractJIRAIssue:
+      title: Extract issue and add to image
+      type: jira-issue-extractor
+      fail_fast: false
+      stage: build
+      arguments:
+        IMAGE: >-
+          336151728602.dkr.ecr.us-west-2.amazonaws.com/${{CF_REPO_NAME}}/${{MICROSERVICE}}:${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+        JIRA_PROJECT_PREFIX: SA
+        MESSAGE: '${{CF_PULL_REQUEST_HEAD_BRANCH}}'
+        JIRA_HOST: codefresh-io.atlassian.net
+        JIRA_EMAIL: '${{JIRA_API_USER}}'
+        JIRA_API_TOKEN: '${{JIRA_API_TOKEN}}'
+      when:
+        condition:
+          all:
+            whenPullRequestTargetMainBranch: 'includes("${{CF_PULL_REQUEST_TARGET}}", "main") == true'
+    PushDockerImage:
+      type: push
+      arguments:
+        candidate: '${{BuildDockerImage}}'
+        tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+        image_name: '${{CF_REPO_NAME}}/${{MICROSERVICE}}'
+        registry: ecr
+      stage: push
+      when:
+        condition:
+          all:
+            whenMICROSERVICEisNotSet: 'includes("${{MICROSERVICE}}", "{{MICROSERVICE}}") == false'
+    EditYAMLFile:
+      type: codefreshdemo/yaml-gitops-editor
+      arguments:
+        GIT_CONTEXT: github
+        YAMLFILE: '${{CF_REPO_NAME}}/values.yaml'
+        CREATE_PULL_REQUEST: true
+        TARGET_BRANCH: main
+        KEYVALUE_PAIRS:
+          - >-
+            ${{MICROSERVICE}}.image.tag=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
+      stage: update_git
+      when:
+        condition:
+          all:
+            whenMICROSERVICEisNotSet: 'includes("${{MICROSERVICE}}", "{{MICROSERVICE}}") == false'
+            whenMICROSERVICEisNottests: 'includes("${{MICROSERVICE}}", "tests") == false'
+    ArgoSyncDevelopment:
+      title: Sync Development ArgoCD App
+      type: argocd-sync
+      arguments:
+        context: sales-dev-eks-argocd
+        app_name: development-argo-voting-app
+        additional_flags: '--loglevel debug --timeout 1200 --grpc-web --values ./values.yaml'
+      stage: sync_development
+      when:
+        branch:
+          only:
+            - main
+        condition:
+          all:
+            whenCF_PRERELEASE_FLAGisNotSet: >-
+              includes("${{CF_PRERELEASE_FLAG}}", "{{CF_PRERELEASE_FLAG}}") ==
+              true
+    ArgoSyncStaging:
+      title: Sync Staging ArgoCD App
+      type: argocd-sync
+      arguments:
+        context: sales-dev-eks-argocd
+        app_name: staging-argo-voting-app
+        additional_flags: '--loglevel debug --timeout 1200 --grpc-web --values ./values.yaml'
+      stage: sync_staging
+      when:
+        branch:
+          only:
+            - main
+        condition:
+          all:
+            whenCF_PRERELEASE_FLAGisNotSet: >-
+              includes("${{CF_PRERELEASE_FLAG}}", "{{CF_PRERELEASE_FLAG}}") ==
+              false
+          any:
+            stageRelease: '''${{CF_PRERELEASE_FLAG}}'' == ''true'''
+            prodRelease: '''${{CF_PRERELEASE_FLAG}}'' == ''false'''
+    ApproveProductionRelease:
+      type: pending-approval
+      title: Approve Release to Production
+      stage: approval
+      when:
+        condition:
+          all:
+            prodRelease: '''${{CF_PRERELEASE_FLAG}}'' == ''false'''
+    ArgoSyncProduction:
+      title: Sync Production ArgoCD App
+      type: argocd-sync
+      arguments:
+        context: sales-dev-eks-argocd
+        app_name: production-argo-voting-app
+        additional_flags: '--loglevel debug --timeout 1200 --grpc-web --values ./values.yaml'
+      stage: sync_prod
+      when:
+        branch:
+          only:
+            - main
+        condition:
+          all:
+            whenCF_PRERELEASE_FLAGisNotSet: >-
+              includes("${{CF_PRERELEASE_FLAG}}", "{{CF_PRERELEASE_FLAG}}") ==
+              false
+            prodRelease: '''${{CF_PRERELEASE_FLAG}}'' == ''false'''
+

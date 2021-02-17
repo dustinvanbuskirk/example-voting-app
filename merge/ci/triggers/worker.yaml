@@ -1,0 +1,29 @@
+- name: worker
+  description: Worker Micro Service
+  type: git
+  repo: salesdemocf/argo-voting-app
+  events:
+    - push.heads
+    - pullrequest.opened
+  pullRequestAllowForkEvents: false
+  commentRegex: /.*/gi
+  branchRegex: /^(?!.*main).*$/gi
+  branchRegexInput: regex
+  modifiedFilesGlob: worker/**
+  provider: github
+  disabled: false
+  options:
+    noCache: false
+    noCfCache: false
+    resetVolume: false
+  verified: true
+  context: github
+  contexts: []
+  variables:
+    - key: MICROSERVICE
+      value: worker
+  lastExecutionDate: '2020-11-17T18:30:28.988Z'
+  status: verified
+  id: 5fab00c509f3f819315730d5
+  endpoint: 'https://g.codefresh.io/api/providers/github/hook/hjO8SRA7ye'
+  secret: 63uWz5CTMPwDFL5S

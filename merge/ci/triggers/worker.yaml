@@ -1,6 +1,6 @@
 spec:
   triggers:
-      - name: worker
+    - name: worker
       description: Worker Micro Service
       type: git
       repo: salesdemocf/argo-voting-app
